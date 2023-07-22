@@ -1,9 +1,11 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import moduleForLogIn from './modules/moduleForLogIn';
-import moduleForSignUp from './modules/moduleForSignUp';
-import moduleForUniProfile from './modules/moduleForUniProfile';
-import moduleForDormitories from './modules/moduleForDormitories';
+import moduleForLogIn from '@/store/modules/moduleForLogIn';
+import moduleForSignUp from '@/store/modules/moduleForSignUp';
+import moduleForUniProfile from '@/store/modules/moduleForUniProfile';
+import moduleForDormitories from '@/store/modules/moduleForDormitories';
+import moduleForAddingDormitory from '@/store/modules/moduleForAddingDormitory';
+
 
 Vue.use( Vuex );
 
@@ -12,6 +14,7 @@ export default new Vuex.Store( {
     moduleForLogIn,
     moduleForSignUp,
     moduleForUniProfile,
-    moduleForDormitories
+    moduleForDormitories,
+    moduleForAddingDormitory
   }
 } );

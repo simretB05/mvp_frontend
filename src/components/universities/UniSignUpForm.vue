@@ -71,7 +71,7 @@
                 placeholder="Select..."
                 required
               ></v-autocomplete>
-              <!-- State/Province/Region Input -->
+              <!-- state/province/region input -->
               <v-text-field
                 class="text-custom-class"
                 ref="state"
@@ -81,7 +81,7 @@
                 required
                 placeholder="AB"
               ></v-text-field>
-              <!-- ZIP / Postal Code Input -->
+              <!-- zip / postal code input -->
               <v-autocomplete
                 class="text-custom-class"
                 ref="zip"
@@ -92,6 +92,7 @@
                 placeholder="Select..."
                 required
               ></v-autocomplete>
+              <!-- country / country  input -->
               <v-autocomplete
                 class="text-custom-class"
                 ref="country"
@@ -102,6 +103,7 @@
                 placeholder="Select..."
                 required
               ></v-autocomplete>
+              <!--  Image file input -->
               <v-file-input
                 class="text-custom-class"
                 label="Your Profile Image"
@@ -114,6 +116,7 @@
                 :error-messages="errorMessages"
                 placeholder="Image"
               ></v-file-input>
+              <!-- phone number input -->
               <v-text-field
                 class="text-custom-class"
                 v-model="phone_number"
@@ -122,6 +125,7 @@
                 label="Phone Number"
                 required
               ></v-text-field>
+              <!-- email / email  input -->
               <v-text-field
                 class="text-custom-class"
                 v-model="email"
@@ -130,6 +134,7 @@
                 label="E-mail"
                 required
               ></v-text-field>
+              <!-- password / password  input -->
               <v-text-field
                 class="text-custom-class"
                 v-model="password"
