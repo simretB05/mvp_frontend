@@ -1,6 +1,7 @@
 // Import required libraries
 import axios from "axios";
 import Vue from "vue";
+import Cookies from "vue-cookies";
 import Toast from "vue-toastification";
 
 // Initialize Vue instance and use Vue Toastification plugin
@@ -13,6 +14,7 @@ const url = process.env.VUE_APP_BASE_URL + '/api/dormitory';
 const state = {
     error: null,
     isLoadingDormitories: false,
+    token: Cookies.get( "token" ) || "",
     dormitoriesData: undefined
 };
 // Mutations object
@@ -35,26 +37,28 @@ const mutations = {
 };
 // Getters object
 const getters = {
-    get_dormData: ( state ) => state.dormitoriesData,
-    get_dormIsLoading: ( state ) => state.isLoadingDormitories,
-    get_dormInfoError: ( state ) => state.error,
+    add_dormData: ( state ) => state.dormitoriesData,
+    add_dormIsLoading: ( state ) => state.isLoadingDormitories,
+    add_dormInfoError: ( state ) => state.error,
 };
 // Actions object
 const actions = {
-    async getUniDormitories( { commit }, id )
+    async addDormitory( { commit }, form )
     {
+        console.log( state.token )
         commit( 'setLoading', true );
         try
         {
-            const response = await axios.post( url, {
-                params: {
-                    university_id: id,
+            const response = await axios.post( url, form, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    token: state.token
                 },
             } );
             commit( 'setLoading', false );
             commit( 'setUniInfoData', response[`data`] );
 
-            Vue.$toast.success( "Your  Dormitories Are Ready ", {
+            Vue.$toast.success( "New dormitory has been Added ", {
                 timeout: 2000,
             } );
             return response.data; // Return the response data to the component

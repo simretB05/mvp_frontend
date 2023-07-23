@@ -34,10 +34,10 @@
               <!-- city input -->
               <v-autocomplete
                 class="text-custom-class"
-                ref="dormCity"
+                ref="city"
                 v-model="city"
-                :rules="[() => !city || 'This field is required']"
-                :items="city"
+                :rules="[() => !!city || 'This field is required']"
+                :items="cityData"
                 placeholder="Select..."
                 label="City"
                 required
@@ -58,29 +58,29 @@
                 ref="zip"
                 v-model="zip"
                 :rules="[() => !!zip || 'This field is required']"
-                :items="zip"
+                :items="zipData"
                 label="ZIP / Postal Code"
                 placeholder="Select..."
                 required
               ></v-autocomplete>
               <!-- country input -->
-              <v-autocomplete
+              <v-text-field
                 class="text-custom-class"
                 ref="country"
                 v-model="country"
                 :rules="[() => !!country || 'This field is required']"
-                :items="countries"
-                label="Country"
-                placeholder="Select..."
+                label="State/Province/Region"
+                placeholder="Canada"
                 required
-              ></v-autocomplete>
+              ></v-text-field>
               <!-- Facilities Dropdown  -->
               <v-autocomplete
                 class="text-custom-class"
-                ref="dormFacilities"
-                v-model="dormFacilities"
-                :rules="[() => !!dormFacilities || 'This field is required ']"
-                :items="facilities"
+                ref="facilities"
+                facilities
+                v-model="facilities"
+                :rules="[rules.required]"
+                :items="facilitiesArray"
                 label="Facilities"
                 multiple
                 chips
@@ -92,11 +92,25 @@
         </v-card-text>
         <v-divider class="mt-12"></v-divider>
         <v-card-actions>
-          <!-- Clear Button -->
-          <v-btn text color="#f4511e" @click="clearForm">Clear</v-btn>
+          <v-btn color="#f4511e" text @click="resetForm"> Clear </v-btn>
           <v-spacer></v-spacer>
-          <!-- Add Button -->
-          <v-btn color="#f4511e" text @click="submit">Add Dormitory</v-btn>
+          <v-slide-x-reverse-transition>
+            <v-tooltip v-if="formHasErrors" left>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  icon
+                  class="my-0"
+                  v-bind="attrs"
+                  @click="resetForm"
+                  v-on="on"
+                >
+                  <v-icon color="#f4511e">mdi-refresh</v-icon>
+                </v-btn>
+              </template>
+              <span>Refresh form</span>
+            </v-tooltip>
+          </v-slide-x-reverse-transition>
+          <v-btn color="#f4511e" text @click="submit"> Submit </v-btn>
         </v-card-actions>
       </v-card>
     </v-col>
@@ -107,24 +121,34 @@
 import {
   cities,
   zip_codes,
-  facilities,
+  facilitiesData,
 } from "@/components/utils/MiscellaneousUtils";
 import Cookies from "vue-cookies";
 import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
-      countries: ["Canada"],
-      selectedFacilities: [],
+      country: "Canada",
+      facilitiesArray: facilitiesData,
       formHasErrors: false,
       errorMessages: "",
-      facilities: facilities,
+      facilities: [],
+      city: null,
       name: null,
       address: null,
-      city: cities,
+      cityData: cities,
       state: "AB",
-      zip: zip_codes,
-      rules: {},
+      zipData: zip_codes,
+      zip: null,
+      token: Cookies.get("token"),
+      rules: {
+        required: (facilities) => {
+          if (!facilities.length <= 4) {
+            return "This field is required ,4 Facilities are the minimum";
+          }
+          return true;
+        },
+      },
     };
   },
   computed: {
@@ -133,11 +157,10 @@ export default {
         name: this.name,
         address: this.address,
         city: this.city,
-        website: this.website,
         state: this.state,
         zip: this.zip,
         country: this.country,
-        facilities: this.selectedFacilities,
+        facilities: JSON.stringify(this.facilities),
       };
     },
     ...mapGetters(["getUniInfoData"]),
@@ -148,9 +171,8 @@ export default {
       this.errorMessages = "";
     },
   },
-
   methods: {
-    ...mapActions(["signUpUni"]),
+    ...mapActions(["addDormitory"]),
 
     resetForm() {
       this.errorMessages = [];
@@ -160,13 +182,13 @@ export default {
         this.$refs[f].reset();
       });
     },
-    addressCheck() {
-      this.errorMessages =
-        this.address && !this.name ? `Hey! I'm required` : "";
-
-      return true;
-    },
     async submit() {
+      console.log(this.formHasErrors);
+      console.log(this.form);
+      console.log(this.form.facilities);
+
+      console.log(this.token);
+
       this.formHasErrors = false;
 
       Object.keys(this.form).forEach((f) => {
@@ -174,15 +196,14 @@ export default {
 
         this.$refs[f].validate(true);
       });
-      try {
-        let responsedata = await this.signUpUni(this.form);
-        Cookies.set("responseData", responsedata);
-        let university_id = responsedata[0][`id`];
-        Cookies.set("university_id", university_id);
-        this.$root.$emit("universityLoggedIn", responsedata);
-        this.$router.push(`/university-home`);
-      } catch (error) {
-        error;
+      if (this.token && this.formHasErrors === false) {
+        try {
+          let responsedata = await this.addDormitory(this.form, this.token);
+          Cookies.set("responseData", responsedata);
+          this.$root.$emit("new_dorm_added");
+        } catch (error) {
+          error;
+        }
       }
     },
   },

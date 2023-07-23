@@ -51,6 +51,7 @@ const actions = {
             const response = await axios.post( url, form, {
                 headers: {
                     "Content-Type": "multipart/form-data",
+
                 },
             } );
             commit( 'setLoading', false );

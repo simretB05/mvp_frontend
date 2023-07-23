@@ -129,8 +129,9 @@ export default {
       try {
         let responsedata = await this.logInUni(this.form);
         Cookies.set("responseData", responsedata);
-        let university_id = responsedata[0][`id`];
-        Cookies.set("university_id", university_id);
+        Cookies.set("university_id", responsedata[0][`id`]);
+        Cookies.set("token", responsedata[0][`token`]);
+
         this.$root.$emit("universityLoggedIn", responsedata);
 
         this.$router.push(`/university-home`);

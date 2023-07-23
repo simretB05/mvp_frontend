@@ -3,7 +3,7 @@
     <nav fixed-top>
       <v-layout row class="lg_nav">
         <v-flex xs-12>
-          <v-app-bar app flat color="#5c6bc0">
+          <v-app-bar app flat color="#061e36">
             <v-app-bar-nav-icon
               color="#f4511e"
               class="d-lg-none darken-6"
@@ -29,7 +29,7 @@
         </v-flex>
       </v-layout>
       <v-navigation-drawer
-        color="#5c6bc0"
+        color="#061e36"
         v-model="drawer"
         fixed
         left

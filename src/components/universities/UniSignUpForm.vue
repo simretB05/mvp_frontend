@@ -3,7 +3,7 @@
     <v-col cols="12" class="pa-lg-12">
       <v-card ref="form">
         <v-card-text class="pa-12">
-          <v-layout>
+          <v-layout style="border: 1px solid rgb(19, 19, 19)">
             <v-flex class="make-grid pxa-7">
               <!-- name input -->
               <v-text-field
@@ -66,6 +66,7 @@
                   () => !!city || 'This field is required',
                   addressCheck,
                 ]"
+                :error-messages="errorMessages"
                 :items="cities"
                 label="City"
                 placeholder="Select..."
@@ -302,39 +303,43 @@ export default {
 
   methods: {
     ...mapActions(["signUpUni"]),
+    methods: {
+      addressCheck() {
+        this.errorMessages =
+          this.address && !this.name ? `Hey! I'm required` : "";
 
-    resetForm() {
-      this.errorMessages = [];
-      this.formHasErrors = false;
+        return true;
+      },
+      resetForm() {
+        this.errorMessages = [];
+        this.formHasErrors = false;
 
-      Object.keys(this.form).forEach((f) => {
-        this.$refs[f].reset();
-      });
-    },
-    addressCheck() {
-      this.errorMessages =
-        this.address && !this.name ? `Hey! I'm required` : "";
+        Object.keys(this.form).forEach((f) => {
+          this.$refs[f].reset();
+        });
+      },
 
-      return true;
-    },
-    async submit() {
-      this.formHasErrors = false;
+      async submit() {
+        this.formHasErrors = false;
 
-      Object.keys(this.form).forEach((f) => {
-        if (!this.form[f]) this.formHasErrors = true;
+        Object.keys(this.form).forEach((f) => {
+          if (!this.form[f]) this.formHasErrors = true;
 
-        this.$refs[f].validate(true);
-      });
-      try {
-        let responsedata = await this.signUpUni(this.form);
-        Cookies.set("responseData", responsedata);
-        let university_id = responsedata[0][`id`];
-        Cookies.set("university_id", university_id);
-        this.$root.$emit("universityLoggedIn", responsedata);
-        this.$router.push(`/university-home`);
-      } catch (error) {
-        error;
-      }
+          this.$refs[f].validate(true);
+        });
+        if (this.formHasErrors === false) {
+          try {
+            let responsedata = await this.signUpUni(this.form);
+            Cookies.set("responseData", responsedata);
+            Cookies.set("university_id", responsedata[0][`id`]);
+            Cookies.set("token", responsedata[0][`token`]);
+            this.$root.$emit("universityLoggedIn", responsedata);
+            this.$router.push(`/university-home`);
+          } catch (error) {
+            error;
+          }
+        }
+      },
     },
   },
 };
@@ -342,7 +347,7 @@ export default {
 <style scoped>
 .make-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
 }
 .text-custom-class {
   padding: 10px;

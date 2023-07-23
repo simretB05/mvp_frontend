@@ -1,6 +1,11 @@
 <template>
-  <v-footer dark padless>
-    <v-card flat tile class="indigo lighten-1 white--text text-center max-0">
+  <v-footer dark padless class="footer">
+    <v-card
+      flat
+      tile
+      color="#061e36"
+      class="darken-4 lighten-1 white--text text-center max-0"
+    >
       <v-container class="container">
         <v-layout row wrap justify-center>
           <v-flex cols="6">
@@ -31,17 +36,21 @@
           </v-flex>
         </v-layout>
       </v-container>
-      <v-card-text>
-        Phasellus feugiat arcu sapien, et iaculis ipsum elementum sit amet.
-        Mauris cursus commodo interdum. Praesent ut risus eget metus luctus
-        accumsan id ultrices nunc. Sed at orci sed massa consectetur dignissim a
-        sit amet dui. Duis commodo vitae velit et faucibus. Morbi vehicula
-        lacinia malesuada. Nulla placerat augue vel ipsum ultrices, cursus
-        iaculis dui sollicitudin. Vestibulum eu ipsum vel diam elementum tempor
-        vel ut orci. Orci varius natoque penatibus et magnis dis parturient
-        montes, nascetur ridiculus mus.
-      </v-card-text>
-
+      <v-row justify="center">
+        <v-col cols="12" sm="8" md="6" lg="5">
+          <h2 class="text-center font-weight-bold mb-4">
+            Welcome to Our Dormitory Website
+          </h2>
+          <p class="text-center">
+            Join our growing community of universities and provide your students
+            with the best-in-class accommodations. We are committed to offering
+            a hassle-free experience, ensuring that your dormitories receive the
+            attention they deserve. Get started today and empower your students
+            to find their ideal living spaces on our university-focused
+            dormitory website!
+          </p>
+        </v-col>
+      </v-row>
       <v-divider></v-divider>
 
       <!-- <v-card-text class="white--text text-center">
@@ -99,7 +108,7 @@ export default {
   /* padding: 16px; */
 }
 .na .v-list-item-title {
-  color: #12f0dd;
+  color: #072f1c;
   width: 100%;
 }
 </style>

@@ -168,7 +168,7 @@ export const zip_codes = [
     "T9Z",
 ]
 
-export const facilities = [
+export const facilitiesData = [
     "bed",
     "kitchen",
     "gym",

@@ -1,5 +1,13 @@
 <template>
   <v-container sm="12" class="container-custom">
+    <v-row justify="flex-start">
+      <v-col cols="12" sm="8" md="6" lg="5">
+        <h2 class="green--text-center font-weight-bold mb-4">
+          Welcome to Your Dormitories
+        </h2>
+        <p class="text-center">Browse and manage your dormitories here</p>
+      </v-col>
+    </v-row>
     <v-col
       class="text-subtitle-1 deep-orange--text text--darken-3 font-weight-bold text-center"
       cols="12"
@@ -19,13 +27,13 @@
     <v-layout row class="lg_nav" cols="8" sm="6" md="4" lg="3">
       <v-flex xs-12>
         <v-row class="justify-center">
-          <v-col cols="12" sm="12" md="12" lg="7">
+          <v-col cols="12" sm="12" md="12" lg="7" v-if="dormitories.length > 0">
             <v-carousel cycle show-arrows-on-hover hide-delimiter-background>
               <v-carousel-item v-for="(dormitory, i) in dormitories" :key="i">
                 <v-card cols="8" sm="6" md="4" lg="4">
                   <v-img
                     :src="card.src"
-                    height="200"
+                    height="290"
                     class="white--text align-end"
                     gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.3)"
                   >
@@ -75,67 +83,129 @@
               </v-carousel-item>
             </v-carousel>
           </v-col>
+          <v-col
+            class="text-subtitle-1 deep-orange--text text--darken-3 font-weight-bold text-center"
+            cols="12"
+            v-else
+          >
+            No Dormitories Currently, use the Add Your Dormitory Button to Add
+            Your Dormitories
+          </v-col>
         </v-row>
       </v-flex>
     </v-layout>
-    <v-row align="start">
-      <v-col cols="12" sm="12" align-start>
-        <div class="text-center">
-          <div class="my-4">
-            <v-btn
-              x-large
-              color="#5c6bc0"
-              dark
-              @click="dialog = !dialog"
-              class="hide-on-xs-only"
-            >
-              <v-icon color="#f4511e">mdi-domain</v-icon> Add Dormitory
-            </v-btn>
-            <v-btn
-              color="primary"
-              fab
-              small
-              dark
-              @click="handleEdit"
-              class="hide-on-xs-only"
-            >
-              <v-icon>mdi-pencil</v-icon>
-            </v-btn>
-            <v-btn
-              color="error"
-              fab
-              small
-              dark
-              @click="handleDelete"
-              class="hide-on-xs-only"
-            >
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </div>
-        </div>
+    <v-row justify="center">
+      <v-col class="search" cols="12" sm="8" md="6" lg="5">
+        <v-text-field
+          v-model="searchQuery"
+          label="Search Dormitories"
+          placeholder="Enter dormitory name"
+          @input="searchDormitories"
+          prepend-inner-icon="mdi-magnify"
+        ></v-text-field>
       </v-col>
     </v-row>
-    <v-dialog v-model="dialog" max-width="500px">
-      <v-card>
-        <v-card-title>
-          <v-spacer></v-spacer>
-          <v-btn icon @click="dialog = false">
-            <v-icon color="#f4511e">mdi-close</v-icon>
-          </v-btn>
-        </v-card-title>
-        <v-card-text>
-          <add-dormitories></add-dormitories>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
+    <v-row>
+      <v-row>
+        <v-col cols="12" sm="12" align-start>
+          <div class="text-center">
+            <div class="my-4">
+              <v-btn
+                x-large
+                color="#061e36"
+                dark
+                @click="dialog = !dialog"
+                class="hide-on-xs-only"
+              >
+                <v-icon color="#f4511e">mdi-domain</v-icon> Add Dormitory
+              </v-btn>
+            </div>
+          </div>
+        </v-col>
+      </v-row>
+      <v-dialog v-model="dialog" max-width="500px">
+        <v-card>
+          <v-card-title>
+            <v-spacer></v-spacer>
+            <v-btn icon @click="dialog = false">
+              <v-icon color="#f4511e">mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-text>
+            <add-dormitories></add-dormitories>
+          </v-card-text>
+        </v-card> </v-dialog
+    ></v-row>
+    <v-row justify="center">
+      <v-col
+        cols="12"
+        sm="8"
+        md="6"
+        lg="4"
+        v-for="(dormitory, i) in dormitories"
+        :key="i"
+      >
+        <v-card>
+          <v-img
+            :src="dormitory.image"
+            height="200"
+            class="white--text align-end"
+            gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.3)"
+          >
+            <v-card-title class="black--text text--darken-1 font-weight-bold">{{
+              dormitory.name
+            }}</v-card-title>
+          </v-img>
+          <v-card-text>
+            <div class="black--text text--darken-1 font-weight-normal">
+              Address:
+              {{ dormitory.address }}
+            </div>
+            <div class="black--text text--light-1 font-weight-normal">
+              City: {{ dormitory.city }}
+            </div>
+            <div class="black--text text--light-1 font-weight-normal">
+              State/province/Region: {{ dormitory.state }}
+            </div>
+            <div class="black--text text--light-1 font-weight-normal">
+              ZIP/Postal Code: {{ dormitory.zip }}
+            </div>
+            <div class="black--text text--light-1 font-weight-normal">
+              Country: {{ dormitory.country }}
+            </div>
+            <div class="deep-orange--text text--light-4 font-weight-bold">
+              Facilities:
+            </div>
+            <v-chip-group>
+              <v-chip
+                v-for="(facility, i) in parseFacilities(dormitory.facilities)"
+                :key="i"
+                label
+                class="deep-orange--text text--darken-1 font-weight-bold"
+                >{{ facility }}</v-chip
+              >
+            </v-chip-group>
+          </v-card-text>
+          <v-row justify="center">
+            <!-- Edit Icon -->
+            <v-icon color="#f67850" class="ma-2" @click="editDormitory(index)"
+              >mdi-pencil</v-icon
+            >
+            <!-- Delete Icon -->
+            <v-icon color="#f67850" class="ma-2" @click="deleteDormitory(index)"
+              >mdi-delete</v-icon
+            >
+          </v-row>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 <script>
 import Cookies from "vue-cookies";
+import AddDormitories from "@/components/universities/AddDormitories.vue";
 import axios from "axios";
 import { mapActions, mapGetters } from "vuex";
-import AddDormitories from "@/components/universities/AddDormitories.vue";
-
 export default {
   components: {
     AddDormitories,
@@ -204,13 +274,15 @@ export default {
     },
   },
   mounted() {
+    this.$root.$on("new_dorm_added", this.getUniDormitory);
     this.getUniDormitory();
+
     this.getImage();
   },
 };
 </script>
-<style scoped>
-lg_nav {
+<style  scoped>
+.lg_nav {
 }
 .container-custom {
   width: 50%;
@@ -236,5 +308,11 @@ lg_nav {
   display: flex;
   align-items: center;
 }
+.search {
+  display: flex;
+  justify-content: start;
+}
 </style>
+
+
 

@@ -20,7 +20,10 @@
             <v-icon color="#ffffff">{{ item.icon }}</v-icon>
           </v-list-item-icon>
           <v-list-item-content color="#ffffff">
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-list-item-title
+              class="orange--text text--darken-4 font-weight-bold"
+              >{{ item.title }}</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
       </v-list>

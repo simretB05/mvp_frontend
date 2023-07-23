@@ -1,5 +1,14 @@
 <template>
   <v-container class="custom-size">
+    <v-row justify="flex-start">
+      <v-col cols="12" sm="8" md="6" lg="5">
+        <h2 class="green--text-center font-weight-bold mb-4">
+          <v-icon color="#f4511e" class="mr-2">mdi-cog</v-icon>
+          Settings Page
+        </h2>
+        <p class="text-center">Customize your account settings here</p>
+      </v-col>
+    </v-row>
     <v-card class="mx-auto" max-width="100%">
       <v-container fluid>
         <v-row dense>
@@ -27,7 +36,7 @@
         cols="12"
         v-if="getUniInfoIsLoading"
       >
-        Getting Your Dormitories
+        Getting Your Information
       </v-col>
       <v-col cols="12">
         <v-progress-linear
