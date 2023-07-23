@@ -15,7 +15,6 @@ const state = {
     responseData: undefined,
     error: null,
     isLoading: false,
-    // universityInfo: undefined
 };
 // Mutations object
 const mutations = {

@@ -25,7 +25,7 @@ const mutations = {
     setUniInfoData( state, dormitoriesData )
     {
 
-        state.responseData = dormitoriesData;
+        state.dormitoriesData = dormitoriesData;
     },
     setError( state, error )
     {

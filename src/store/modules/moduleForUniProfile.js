@@ -26,7 +26,7 @@ const mutations = {
     setUniInfoData( state, universityInfo )
     {
 
-        state.responseData = universityInfo;
+        state.universityInfo = universityInfo;
     },
     setError( state, error )
     {

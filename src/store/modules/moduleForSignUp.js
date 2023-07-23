@@ -12,10 +12,9 @@ const url = process.env.VUE_APP_BASE_URL + '/api/university';
 
 // State object
 const state = {
-    responseData: undefined,
     error: null,
     signUpIsLoading: false,
-    // universityInfo: undefined
+    universityInfo: undefined
 };
 // Mutations object
 const mutations = {
@@ -27,7 +26,7 @@ const mutations = {
     setUniInfoData( state, responseData )
     {
 
-        state.responseData = responseData;
+        state.universityInfo = responseData;
     },
     setError( state, error )
     {
@@ -37,7 +36,7 @@ const mutations = {
 };
 // Getters object
 const getters = {
-    getUniInfoData: ( state ) => state.responseData,
+    getUniInfoData: ( state ) => state.universityInfo,
     getsignUpIsLoading: ( state ) => state.signUpIsLoading,
     getSignUpError: ( state ) => state.error,
 };
@@ -55,7 +54,7 @@ const actions = {
                 },
             } );
             commit( 'setLoading', false );
-            commit( 'setData', response[`data`] );
+            commit( 'setUniInfoData', response[`data`] );
 
             Vue.$toast.success( "Successfully Logged In", {
                 timeout: 2000,

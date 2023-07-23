@@ -15,19 +15,36 @@ const state = {
     error: null,
     isLoadingDormitories: false,
     token: Cookies.get( "token" ) || "",
-    dormitoriesData: undefined
+    dormitoriesData: undefined,
+    id: undefined
 };
 // Mutations object
 const mutations = {
     setLoading( state, isLoadingDormitories )
     {
-
         state.isLoadingDormitories = isLoadingDormitories;
     },
     setUniInfoData( state, dormitoriesData )
     {
 
-        state.responseData = dormitoriesData;
+        state.dormitoriesData = dormitoriesData;
+    },
+    setdeleteData( state, id )
+    {
+        // Find the index of the element with the matching "id" in the state.dormitoriesData array
+        let index = state.dormitoriesData.findIndex(
+            ( data ) => data.id === id
+        );
+        // Check if the element with the specified "id" exists in the array (index > -1)
+
+        if ( index > -1 )
+        {
+            // If the element exists, remove it from the array using splice
+
+            this.confirmedOrder.splice( index, 1 );
+        }
+        return;
+
     },
     setError( state, error )
     {
@@ -43,6 +60,7 @@ const getters = {
 };
 // Actions object
 const actions = {
+    //   Action for Adding Dormitories
     async addDormitory( { commit }, form )
     {
         console.log( state.token )
@@ -68,6 +86,40 @@ const actions = {
             // Show error toast message
             commit( 'setLoading', false );
             commit( 'setError', 'Failed to fetch data. Please try again later.' );
+            // Show success toast message
+            Vue.$toast.error( "Something Went Wrong, Please Try Again Later!", {
+                timeout: 2000,
+            } );
+            // throw error; // Throw the error to be caught by the component
+        }
+    },
+
+
+    //   Action for  Deleting  Dormitories
+    async deleteDormitories( { commit }, id )
+    {
+        commit( 'setLoading', true );
+        try
+        {
+            const response = await axios.delete( url, {
+                params: {
+                    id: id,
+                },
+            } );
+            commit( 'setLoading', false );
+
+            commit( 'setdeleteData', id );
+
+            Vue.$toast.success( 'Successfuly deleteda dormitory with the id ', {
+                timeout: 2000,
+            } );
+            return response.data; // Return the response data to the component
+
+        } catch ( error )
+        {
+            // Show error toast message
+            commit( 'setLoading', false );
+            commit( 'setError', 'Failed to delete data. Please try again later.' );
             // Show success toast message
             Vue.$toast.error( "Something Went Wrong, Please Try Again Later!", {
                 timeout: 2000,

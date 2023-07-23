@@ -1,6 +1,6 @@
 <template>
   <v-container sm="12" class="container-custom">
-    <v-row justify="flex-start">
+    <v-row align="center">
       <v-col cols="12" sm="8" md="6" lg="5">
         <h2 class="green--text-center font-weight-bold mb-4">
           Welcome to Your Dormitories
@@ -33,7 +33,7 @@
                 <v-card cols="8" sm="6" md="4" lg="4">
                   <v-img
                     :src="card.src"
-                    height="290"
+                    height="200"
                     class="white--text align-end"
                     gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.3)"
                   >
@@ -94,15 +94,16 @@
         </v-row>
       </v-flex>
     </v-layout>
-    <v-row justify="center">
+    <v-row align="center">
       <v-col class="search" cols="12" sm="8" md="6" lg="5">
         <v-text-field
           v-model="searchQuery"
+          ref="searchQuery"
           label="Search Dormitories"
           placeholder="Enter dormitory name"
-          @input="searchDormitories"
           prepend-inner-icon="mdi-magnify"
         ></v-text-field>
+        <!-- @input="searchDormitories" -->
       </v-col>
     </v-row>
     <v-row>
@@ -192,7 +193,7 @@
               >mdi-pencil</v-icon
             >
             <!-- Delete Icon -->
-            <v-icon color="#f67850" class="ma-2" @click="deleteDormitory(index)"
+            <v-icon color="#f67850" class="ma-2" @click="deleteDormitory"
               >mdi-delete</v-icon
             >
           </v-row>
@@ -212,6 +213,7 @@ export default {
   },
   data() {
     return {
+      searchQuery: null,
       dialog: false,
       university_id: Cookies.get(`university_id`),
       card: [
@@ -272,6 +274,7 @@ export default {
         }
       }
     },
+    deleteDormitory() {},
   },
   mounted() {
     this.$root.$on("new_dorm_added", this.getUniDormitory);
