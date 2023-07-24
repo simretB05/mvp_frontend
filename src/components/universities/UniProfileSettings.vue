@@ -1,6 +1,6 @@
 <template>
   <v-container class="custom-size">
-    <v-row justify="flex-start">
+    <v-row>
       <v-col cols="12" sm="8" md="6" lg="5">
         <h2 class="green--text-center font-weight-bold mb-4">
           <v-icon color="#f4511e" class="mr-2">mdi-cog</v-icon>
@@ -113,7 +113,7 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-      <v-card-actions>
+      <!-- <v-card-actions>
         <v-slide-x-reverse-transition>
           <v-tooltip left>
             <template v-slot:activator="{ on, attrs }">
@@ -132,7 +132,7 @@
           </v-tooltip>
         </v-slide-x-reverse-transition>
         <v-btn color="#f4511e" text @click="submit"> edite</v-btn>
-      </v-card-actions>
+      </v-card-actions> -->
     </v-card>
   </v-container>
 </template>

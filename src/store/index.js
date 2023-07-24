@@ -15,6 +15,6 @@ export default new Vuex.Store( {
     moduleForSignUp,
     moduleForUniProfile,
     moduleForDormitories,
-    moduleForAddingDormitory
+    moduleForAddingDormitory,
   }
 } );

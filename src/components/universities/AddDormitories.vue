@@ -183,17 +183,9 @@ export default {
       });
     },
     async submit() {
-      console.log(this.formHasErrors);
-      console.log(this.form);
-      console.log(this.form.facilities);
-
-      console.log(this.token);
-
       this.formHasErrors = false;
-
       Object.keys(this.form).forEach((f) => {
         if (!this.form[f]) this.formHasErrors = true;
-
         this.$refs[f].validate(true);
       });
       if (this.token && this.formHasErrors === false) {
