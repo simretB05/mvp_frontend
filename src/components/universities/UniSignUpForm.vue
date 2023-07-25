@@ -2,8 +2,8 @@
   <v-row justify="center" class="pa-lg-5">
     <v-col cols="12" class="pa-lg-12">
       <v-card ref="form">
-        <v-card-text class="pa-12">
-          <v-layout style="border: 1px solid rgb(19, 19, 19)">
+        <v-card-text class="pa-4">
+          <v-layout style="border: 1px solid rgb(224, 224, 224)">
             <v-flex class="make-grid pxa-7">
               <!-- name input -->
               <v-text-field

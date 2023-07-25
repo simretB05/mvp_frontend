@@ -1,41 +1,22 @@
 <template>
-    <v-layout row wrap justify-end>
-      <v-flex flex cols="3">
-        <v-row class="flex-row justify-end" wrap justify-end>
-          <v-col
-            class="flex-none wrap"
-            cols="3"
-            v-for="(item, i) in items"
-            :key="i"
-            link
-          >
-            <v-list color="transparent" class="nav-list">
-              <v-list-item class="padding-none">
-                <v-divider class="mx-2" color="#e3e6e3" vertical></v-divider>
-                <v-list-item-icon cols="12" class="mrx-1 mx-0 px-0">
-                  <v-icon class="mx-2" color="#f4511e">{{ item.icon }}</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content class="two-columb-layout">
-                  <v-list-item-title class="white--text light subtitle-3">{{
-                    item.title
-                  }}</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-          </v-col>
-        </v-row>
-      </v-flex>
-    </v-layout>
+  <v-layout row wrap justify-end>
+    <v-flex flex cols="3">
+      <v-row class="flex-row justify-end" wrap>
+        <v-col class="col">
+          <v-btn color="white" text class="mr-2">Login</v-btn>
+          <v-btn color="white" outlined>create account</v-btn>
+        </v-col>
+      </v-row>
+    </v-flex>
+  </v-layout>
 </template>
 <script>
 export default {
   data() {
     return {
       drawer: false,
-   
+
       items: [
-        { icon: "mdi-school", title: "University Listing", route: "/signup" },
-        { icon: "mdi-domain", title: "List Your Place ", route: "/signup" },
         { icon: "mdi-mail", title: "Contact-Us", route: "/signup" },
         { icon: "mdi-lightbulb", title: "About-Us", route: "/signup" },
       ],
@@ -64,8 +45,8 @@ export default {
 }
 
 .flex-row {
-  /* display: flex;
-  justify-content: end; */
+  display: flex;
+  justify-content: flex-end;
   width: 100%;
 }
 
@@ -80,5 +61,9 @@ export default {
 .na .v-list-item-title {
   color: #12f0dd;
   width: 100%;
+}
+.col {
+  display: flex;
+  justify-content: end;
 }
 </style>

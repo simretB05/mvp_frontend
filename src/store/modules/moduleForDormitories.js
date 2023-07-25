@@ -1,6 +1,7 @@
 // Import required libraries
 import axios from "axios";
 import Vue from "vue";
+import Cookies from "vue-cookies";
 import Toast from "vue-toastification";
 
 // Initialize Vue instance and use Vue Toastification plugin
@@ -12,7 +13,9 @@ const state = {
     error: null,
     isLoadingDormitories: false,
     dormitoriesData: undefined,
-    isLoadingForDorm: false
+    isLoadingForDorm: false,
+    filteredData: undefined,
+    filteredDorms_copy: []
 };
 // Mutations object
 const mutations = {
@@ -27,7 +30,28 @@ const mutations = {
     setdeleteData( state, id )
     {
         state.dormitoriesData = state.dormitoriesData.filter( data => data.id != id )
-        console.log( state.dormitoriesData )
+
+    },
+    setSearchData( state, input )
+    {
+        state.filteredDorms_copy = state.dormitoriesData;
+
+        console.log( state.filteredDorms_copy );
+        console.log( input );
+
+        if ( input !== "" )
+        {
+            let filteredDorms = state.dormitoriesData.filter( ( data ) =>
+                data.name.includes( input )
+            );
+            state.dormitoriesData = filteredDorms;
+            console.log( filteredDorms );
+            console.log( state.dormitoriesData );
+        } else if ( input === '' )
+        {
+            state.dormitoriesData = Cookies.get( "responsedormitoryData" )
+            console.log( state.filteredDorms_copy );
+        }
 
     },
 
@@ -43,6 +67,7 @@ const getters = {
     get_dormInfoError: ( state ) => state.error,
     get_dormDeleteIsLoading: ( state ) => state.isLoadingDormitories,
     get_dormDeleteInfoError: ( state ) => state.error,
+    get_filterdData: ( state ) => state.filteredData
 };
 // Actions object
 const actions = {
@@ -58,6 +83,8 @@ const actions = {
             } );
             commit( 'setLoading', false );
             commit( 'setUniInfoData', response[`data`] );
+
+
 
             Vue.$toast.success( "Your  Dormitories Are Ready ", {
                 timeout: 2000,
@@ -91,7 +118,7 @@ const actions = {
             Vue.$toast.success( 'Successfuly deleteda dormitory with the id ', {
                 timeout: 2000,
             } );
-            console.log( response.data )
+
             return response.data; // Return the response data to the component
 
         } catch ( error )
@@ -106,8 +133,14 @@ const actions = {
             // throw error; // Throw the error to be caught by the component
         }
     },
+    searchByInput( { commit }, input, )
+    {
+        commit( 'setSearchData', input );
+    }
 
 };
+
+
 
 export default {
     state, getters, actions, mutations

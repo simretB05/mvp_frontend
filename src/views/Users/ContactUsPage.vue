@@ -1,11 +1,16 @@
 <template>
   <div>
-    <h2>Contact-us</h2>
+    <user-contact-us-page></user-contact-us-page>
   </div>
 </template>
 
 <script>
-export default {};
+import UserContactUsPage from "@/components/users/UserContactUsPage.vue";
+export default {
+  components: {
+    UserContactUsPage,
+  },
+};
 </script>
 
 <style  scoped>

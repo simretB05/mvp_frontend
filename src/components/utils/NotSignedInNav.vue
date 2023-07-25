@@ -55,4 +55,9 @@ export default {
 .my-5 {
   margin-top: 30px;
 }
+.v-navigation-drawer__content {
+  height: 66%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 </style>

@@ -27,7 +27,7 @@
     <v-layout row class="lg_nav" cols="12" sm="12" md="4" lg="3">
       <v-flex xs-12>
         <v-row class="justify-center">
-          <v-col cols="12" sm="12" md="12" lg="7" v-if="dormitories.length > 0">
+          <v-col cols="12" sm="12" md="12" lg="7" v-if="get_dormData">
             <v-carousel cycle show-arrows-on-hover hide-delimiter-background>
               <v-carousel-item v-for="(dormitory, i) in get_dormData" :key="i">
                 <v-card cols="8" sm="6" md="4" lg="4">
@@ -102,13 +102,13 @@
     <v-row align="center">
       <v-col class="search" cols="12" sm="12" md="6" lg="2">
         <v-text-field
-          v-model="searchQuery"
-          ref="searchQuery"
+          v-model="search_input"
+          ref="search_input"
           label="Search Dormitories"
           placeholder="Enter dormitory name"
           prepend-inner-icon="mdi-magnify"
+          @input="searchByInput(search_input)"
         ></v-text-field>
-        <!-- @input="searchDormitories" -->
       </v-col>
     </v-row>
     <v-row>
@@ -205,9 +205,9 @@
           </v-card-text>
           <v-row justify="center">
             <!-- Edit Icon -->
-            <!-- <v-icon color="#f67850" class="ma-2" @click="editDormitory(index)"
+            <v-icon color="#f67850" class="ma-2" @click="editDormitory(index)"
               >mdi-pencil</v-icon
-            > -->
+            >
             <!-- Delete Icon -->
             <button>
               <v-icon
@@ -250,8 +250,9 @@ export default {
   },
   data() {
     return {
-      searchQuery: null,
-      // dorm_id: undefined,
+      search_input: null,
+      // searchQuery: undefined,
+
       images: [
         {
           src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg",
@@ -278,11 +279,12 @@ export default {
       "get_dormIsLoading",
       "get_dormData",
       "get_dormDeleteIsLoading",
+      "get_filterdData",
     ]),
     ...mapState(["setdeleteData"]),
   },
   methods: {
-    ...mapActions(["getUniDormitories", "deleteDormitories"]),
+    ...mapActions(["getUniDormitories", "deleteDormitories", "searchByInput"]),
     // A function to parse a JSON-formatted string representing a list of facilities and return it as an array.
     // If there's an error while parsing, it will return an empty array.
     parseFacilities(facilitiesString) {
@@ -323,7 +325,7 @@ export default {
         try {
           let responsedata = await this.getUniDormitories(this.university_id);
           Cookies.set("responsedormitoryData", responsedata);
-          // this.dormitories = responsedata;
+          this.dialog === false;
         } catch (error) {
           error;
         }

@@ -3,9 +3,9 @@
     <nav fixed-top>
       <v-layout row class="lg_nav">
         <v-flex xs-12>
-          <v-app-bar app flat color="#061e36">
+          <v-app-bar app flat color="#789de1">
             <v-app-bar-nav-icon
-              color="#f4511e"
+              color="#ff5722"
               class="d-lg-none darken-6"
               @click="drawer = !drawer"
             >
@@ -29,11 +29,12 @@
         </v-flex>
       </v-layout>
       <v-navigation-drawer
-        color="#061e36"
+        color="#789de1"
         v-model="drawer"
         fixed
         left
         temporary
+        height="100%"
       >
         <!-- Close icon to close the dialog -->
         <v-card-title>
@@ -44,13 +45,6 @@
         </v-card-title>
         <not-signed-in-nav v-if="!id"></not-signed-in-nav>
         <signed-in-nav v-else></signed-in-nav>
-        <template v-slot:append>
-          <div class="pa-2">
-            <v-btn depressed class="white--text" color="#f4511e" block>
-              Logout
-            </v-btn>
-          </div>
-        </template>
       </v-navigation-drawer>
     </nav>
   </v-container>
@@ -102,17 +96,19 @@ export default {
 .lg_nav {
   width: 90%;
 }
-
+nav {
+  display: flex;
+  justify-content: start;
+}
 .my-5 {
   padding: 16px;
 }
-/* .no-scroll {
-  position: fixed;
-  overflow-y: scroll;
-  height: 100vh;
-  width: 100%;
-} */
+.pa-2 {
+  width: 20%;
+}
 .v-responsive__content {
   width: 50%;
+  justify-content: center;
+  color: #789de1;
 }
 </style>

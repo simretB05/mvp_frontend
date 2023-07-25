@@ -27,6 +27,11 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <div class="pa-2">
+        <v-btn depressed class="white--text" color="#f4511e" block>
+          Logout
+        </v-btn>
+      </div>
     </v-col>
   </v-layout>
 </template>
