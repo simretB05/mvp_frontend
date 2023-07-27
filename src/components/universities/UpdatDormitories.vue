@@ -10,76 +10,63 @@
                 class="text-custom-class"
                 ref="name"
                 v-model="name"
-                :rules="[() => !!name || 'This field is required']"
-                :error-messages="errorMessages"
                 label="Dormitory Name"
-                required
               ></v-text-field>
               <!-- dormitory address input -->
               <v-text-field
                 class="text-custom-class"
                 ref="address"
                 v-model="address"
-                :rules="[
-                  () => !!address || 'This field is required',
-                  () =>
-                    (!!address && address.length <= 25) ||
-                    'Address must be less than 25 characters',
-                ]"
                 label="Dormitory Address"
                 placeholder="Snowy Rock Pl"
                 counter="25"
-                required
               ></v-text-field>
               <!-- city input -->
               <v-autocomplete
                 class="text-custom-class"
                 ref="city"
                 v-model="city"
-                :rules="[() => !!city || 'This field is required']"
                 :items="cityData"
                 placeholder="Select..."
                 label="City"
-                required
               ></v-autocomplete>
               <!-- state/province/region input -->
-              <v-text-field
+              <v-autocomplete
                 class="text-custom-class"
                 ref="state"
                 v-model="state"
                 :rules="[() => !!state || 'This field is required']"
                 label="State/Province/Region"
+                :items="states"
                 placeholder="AB"
-                required
-              ></v-text-field>
+              ></v-autocomplete>
               <!-- zip / postal code input -->
               <v-autocomplete
                 class="text-custom-class"
                 ref="zip"
                 v-model="zip"
-                :rules="[() => !!zip || 'This field is required']"
                 :items="zipData"
                 label="ZIP / Postal Code"
                 placeholder="Select..."
                 required
               ></v-autocomplete>
               <!-- country input -->
-              <v-text-field
+              <v-autocomplete
                 class="text-custom-class"
                 ref="country"
                 v-model="country"
                 :rules="[() => !!country || 'This field is required']"
-                label="State/Province/Region"
+                :items="countries"
+                label="Country"
                 placeholder="Canada"
                 required
-              ></v-text-field>
+              ></v-autocomplete>
               <!-- Facilities Dropdown  -->
               <v-autocomplete
                 class="text-custom-class"
                 ref="facilities"
                 facilities
                 v-model="facilities"
-                :rules="[rules.required]"
                 :items="facilitiesArray"
                 label="Facilities"
                 multiple
@@ -110,7 +97,7 @@
               <span>Refresh form</span>
             </v-tooltip>
           </v-slide-x-reverse-transition>
-          <v-btn color="#f4511e" text @click="submit"> Add Dormitory</v-btn>
+          <v-btn color="#f4511e" text @click="submitUpdate"> Submit </v-btn>
         </v-card-actions>
       </v-card>
     </v-col>
@@ -126,9 +113,13 @@ import {
 import Cookies from "vue-cookies";
 import { mapActions, mapGetters } from "vuex";
 export default {
+  props: {
+    dorm_id: Number,
+  },
   data() {
     return {
-      country: "Canada",
+      countries: ["Canada"],
+      country: null,
       facilitiesArray: facilitiesData,
       formHasErrors: false,
       errorMessages: "",
@@ -137,30 +128,27 @@ export default {
       name: null,
       address: null,
       cityData: cities,
-      state: "AB",
+      state: null,
+      states: ["AB"],
       zipData: zip_codes,
       zip: null,
       token: Cookies.get("token"),
-      rules: {
-        required: (facilities) => {
-          if (!facilities.length <= 4) {
-            return "This field is required ,4 Facilities are the minimum";
-          }
-          return true;
-        },
-      },
     };
   },
   computed: {
     form() {
       return {
-        name: this.name,
-        address: this.address,
-        city: this.city,
+        id: this.dorm_id,
+        name: this.name ? this.name : null,
+        address: this.address ? this.address : null,
+        city: this.city ? this.city : null,
         state: this.state,
-        zip: this.zip,
+        zip: this.zip ? this.zip : null,
         country: this.country,
-        facilities: JSON.stringify(this.facilities),
+        facilities:
+          this.facilities && this.facilities.length > 0
+            ? JSON.stringify(this.facilities)
+            : null,
       };
     },
     ...mapGetters(["getUniInfoData"]),
@@ -172,33 +160,36 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["addDormitory"]),
+    ...mapActions(["addDormitory", "updatingDormitory"]),
 
     resetForm() {
       this.errorMessages = [];
       this.formHasErrors = false;
-
       Object.keys(this.form).forEach((f) => {
-        this.$refs[f].reset();
+        if (this.$refs[f]) {
+          this.$refs[f].reset();
+        }
       });
     },
-    async submit() {
+    async submitUpdate() {
       this.formHasErrors = false;
-      Object.keys(this.form).forEach((f) => {
-        if (!this.form[f]) this.formHasErrors = true;
-        this.$refs[f].validate(true);
-      });
-      if (this.token && this.formHasErrors === false) {
+      if (this.form.state === null || this.form.country === null) {
+        this.formHasErrors = true;
+        this.$refs.state.validate(true);
+        this.$refs.country.validate(true);
+      }
+      if (this.dorm_id && this.formHasErrors === false) {
         try {
-          let responsedata = await this.addDormitory(this.form, this.token);
-          Cookies.set("responseData", responsedata);
-          this.$root.$emit("new_dorm_added");
+          let responsedata = await this.updatingDormitory(this.form);
+          responsedata;
+          this.$root.$emit("close");
         } catch (error) {
           error;
         }
       }
     },
   },
+  mounted() {},
 };
 </script>
 <style scoped>

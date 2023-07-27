@@ -29,8 +29,11 @@ const mutations = {
     },
     setdeleteData( state, id )
     {
-        state.dormitoriesData = state.dormitoriesData.filter( data => data.id != id )
+        if ( state.dormitoriesData !== [] )
+        {
+            state.dormitoriesData = state.dormitoriesData.filter( data => data.id != id )
 
+        }
     },
     setSearchData( state, input )
     {
@@ -113,9 +116,8 @@ const actions = {
                     id: id,
                 },
             } );
-            commit( 'setLoadingDorm', false, id );
             commit( 'setdeleteData', id );
-            Vue.$toast.success( 'Successfuly deleteda dormitory with the id ', {
+            Vue.$toast.success( `Successfuly deleted dormitory with the id ${ id }`, {
                 timeout: 2000,
             } );
 
@@ -136,11 +138,9 @@ const actions = {
     searchByInput( { commit }, input, )
     {
         commit( 'setSearchData', input );
-    }
+    },
 
 };
-
-
 
 export default {
     state, getters, actions, mutations

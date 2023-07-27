@@ -7,7 +7,7 @@
       class="darken-4 lighten-1 white--text text-center max-0"
     >
       <v-container>
-        <v-layout row wrap justify-center>
+        <v-layout row wrap>
           <v-flex
             xs="12"
             sm="6"
@@ -24,7 +24,7 @@
         </v-layout>
       </v-container>
       <v-divider></v-divider>
-      <v-row justify="center">
+      <v-row justify="center" class="ma-0">
         <v-col cols="12" sm="8" md="6" lg="5">
           <h2 class="text-center font-weight-bold mb-4">
             Welcome to Our Dormitory Website
@@ -58,5 +58,4 @@ export default {
 </script>
 
 <style scoped>
-/* Add any custom styles for the footer here, if needed */
 </style>

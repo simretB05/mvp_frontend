@@ -8,6 +8,7 @@ import Toast from "vue-toastification";
 Vue.use( Toast );
 
 const url = process.env.VUE_APP_BASE_URL + '/api/dormitory';
+const urlUpdate = process.env.VUE_APP_BASE_URL + '/api/update-dormitory';
 
 
 // State object
@@ -15,7 +16,8 @@ const state = {
     error: null,
     isLoadingDormitories: false,
     token: Cookies.get( "token" ) || "",
-    dormitoriesData: undefined
+    dormitoriesData: undefined,
+    updatedDormdata: undefined
 };
 // Mutations object
 const mutations = {
@@ -28,6 +30,10 @@ const mutations = {
     {
 
         state.responseData = dormitoriesData;
+    },
+    setUpdate( state, updateResponse )
+    {
+        state.updatedDormdata = updateResponse
     },
     setError( state, error )
     {
@@ -59,6 +65,42 @@ const actions = {
             commit( 'setUniInfoData', response[`data`] );
 
             Vue.$toast.success( "New dormitory has been Added ", {
+                timeout: 2000,
+            } );
+            return response.data; // Return the response data to the component
+
+        } catch ( error )
+        {
+            // Show error toast message
+            commit( 'setLoading', false );
+            commit( 'setError', 'Failed to fetch data. Please try again later.' );
+            // Show success toast message
+            Vue.$toast.error( "Something Went Wrong, Please Try Again Later!", {
+                timeout: 2000,
+            } );
+            // throw error; // Throw the error to be caught by the component
+        }
+    },
+    /// updating dormitories
+
+    async updatingDormitory( { commit }, form, )
+    {
+
+
+        commit( 'setLoading', true );
+        try
+        {
+            const response = await axios.patch( urlUpdate, form, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    token: state.token
+                },
+
+            } );
+            commit( 'setLoading', false );
+            commit( 'setUpdate', response[`data`] );
+
+            Vue.$toast.success( "Dormitory Updated ", {
                 timeout: 2000,
             } );
             return response.data; // Return the response data to the component

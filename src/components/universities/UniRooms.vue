@@ -4,10 +4,12 @@
       <v-col cols="12" sm="12" md="6" lg="5">
         <h2 class="green--text-center font-weight-bold mb-4">
           <v-icon color="#f4511e" class="mr-2">mdi-cog</v-icon>
-          Dormitories Settings Page
+          Rooms Settings Page
         </h2>
 
-        <p class="text-center">Browse and manage Dormitories here</p>
+        <p class="text-center">
+          Browse and manage Rooms and Rppm facilities Here
+        </p>
       </v-col>
     </v-row>
     <v-col
@@ -21,69 +23,24 @@
         </v-progress-linear>
       </v-col>
     </v-col>
-    <v-layout row class="lg_nav" cols="12" sm="12" md="4" lg="3">
+    <v-layout row class="lg_nav" cols="12" sm="12" md="4" lg="9">
       <v-flex xs-12>
         <v-row class="justify-center">
-          <v-col cols="12" sm="12" md="12" lg="7" v-if="get_dormData > [0]">
-            <v-carousel cycle show-arrows-on-hover hide-delimiter-background>
-              <v-carousel-item v-for="(dormitory, i) in get_dormData" :key="i">
-                <v-card cols="8" sm="6" md="4" lg="4">
-                  <v-img
-                    :src="card.src"
-                    height="200"
-                    class="white--text align-end"
-                    gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.3)"
-                  >
-                    <v-card-title
-                      class="black--text text--darken-1 font-weight-bold"
-                      >{{ dormitory.name }}</v-card-title
-                    >
-                  </v-img>
-                  <v-card-text>
-                    <div>
-                      <div
-                        class="black--text text--darken-1 font-weight-normal"
-                      >
-                        Dormitory Name: {{ dormitory.name }}
-                      </div>
-                      <div
-                        class="black--text text--darken-1 font-weight-normal"
-                      >
-                        Address: {{ dormitory.address }}
-                      </div>
-                      <div class="black--text text--light-1 font-weight-normal">
-                        City: {{ dormitory.city }}
-                      </div>
-                      <div class="black--text text--light-1 font-weight-normal">
-                        State/province/Region: {{ dormitory.state }}
-                      </div>
-                      <div class="black--text text--light-1 font-weight-normal">
-                        ZIP/Postal Code: {{ dormitory.zip }}
-                      </div>
-                      <div class="black--text text--light-1 font-weight-normal">
-                        Country: {{ dormitory.country }}
-                      </div>
-                    </div>
-                    <div
-                      class="deep-orange--text text--light-4 font-weight-bold"
-                    >
-                      Facilities:
-                    </div>
-                    <v-chip-group>
-                      <v-chip
-                        v-for="(facility, i) in parseFacilities(
-                          dormitory.facilities
-                        )"
-                        :key="i"
-                        label
-                        class="deep-orange--text text--darken-1 font-weight-bold"
-                        >{{ facility }}</v-chip
-                      >
-                    </v-chip-group>
-                  </v-card-text>
+          <v-col cols="4" sm="12" md="12" lg="12" v-if="get_dormData > [0]">
+            <v-row>
+              <v-col cols="12" md="6" lg="3">
+                <v-card>
+                  <v-card-title primary class="headline">Card 1</v-card-title>
+                  <v-card-text> Content for Card 1 goes here... </v-card-text>
                 </v-card>
-              </v-carousel-item>
-            </v-carousel>
+              </v-col>
+              <v-col cols="12" md="8">
+                <v-card>
+                  <v-card-title primary class="headline">Card 2</v-card-title>
+                  <v-card-text> Content for Card 2 goes here... </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
           </v-col>
           <v-col
             class="text-subtitle-1 deep-orange--text text--darken-3 font-weight-bold text-center"
@@ -236,7 +193,7 @@
     </v-row>
   </v-container>
 </template>
-<script>
+  <script>
 import Cookies from "vue-cookies";
 import AddDormitories from "@/components/universities/AddDormitories.vue";
 import UpdateDormitories from "@/components/universities/UpdatDormitories.vue";
@@ -343,7 +300,7 @@ export default {
   },
 };
 </script>
-<style  scoped>
+  <style  scoped>
 .lg_nav {
 }
 
@@ -385,6 +342,7 @@ v-btn--icon {
   color: black;
 }
 </style>
-
-
-
+  
+  
+  
+  
