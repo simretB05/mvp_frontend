@@ -1,5 +1,5 @@
 <template>
-  <v-footer dark padless class="footer" style="margin-top: 30px">
+  <v-footer dark padless class="footer mt-16">
     <v-card
       flat
       tile
@@ -9,6 +9,7 @@
       <v-container>
         <v-layout row wrap>
           <v-flex
+            class="footer my-7"
             xs="12"
             sm="6"
             md="4"

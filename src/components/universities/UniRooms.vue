@@ -1,21 +1,25 @@
 <template>
-  <v-container sm="12" class="container-custom">
+  <v-container fluid>
     <v-row align="center">
-      <v-col cols="12" sm="12" md="6" lg="5">
+      <v-col
+        cols="12"
+        sm="12"
+        lg="8"
+        justify-content="start"
+        align-items="start"
+      >
         <h2 class="green--text-center font-weight-bold mb-4">
           <v-icon color="#f4511e" class="mr-2">mdi-cog</v-icon>
           Rooms Settings Page
         </h2>
 
-        <p class="text-center">
-          Browse and manage Rooms and Rppm facilities Here
-        </p>
+        <p class="text-center">Browse and manage Rooms and facilities Here</p>
       </v-col>
     </v-row>
     <v-col
       class="text-subtitle-1 deep-orange--text text--darken-3 font-weight-bold text-center"
       cols="12"
-      v-if="get_dormIsLoading && get_dormData > [0]"
+      v-if="get_roomIsLoading && get_roomsData > [0]"
     >
       Getting Your Dormitories
       <v-col cols="12">
@@ -23,18 +27,18 @@
         </v-progress-linear>
       </v-col>
     </v-col>
-    <v-layout row class="lg_nav" cols="12" sm="12" md="4" lg="9">
+    <v-layout row class="lg_nav" cols="12">
       <v-flex xs-12>
         <v-row class="justify-center">
-          <v-col cols="4" sm="12" md="12" lg="12" v-if="get_dormData > [0]">
+          <v-col cols="12" sm="12" md="12" lg="12" v-if="get_roomsData > [0]">
             <v-row>
-              <v-col cols="12" md="6" lg="3">
+              <v-col cols="12">
                 <v-card>
                   <v-card-title primary class="headline">Card 1</v-card-title>
                   <v-card-text> Content for Card 1 goes here... </v-card-text>
                 </v-card>
               </v-col>
-              <v-col cols="12" md="8">
+              <v-col cols="12">
                 <v-card>
                   <v-card-title primary class="headline">Card 2</v-card-title>
                   <v-card-text> Content for Card 2 goes here... </v-card-text>
@@ -47,8 +51,8 @@
             cols="12"
             v-else
           >
-            No Dormitories Currently, use the Add Your Dormitory Button to Add
-            Your Dormitories
+            No Dormitories Currently, use the Add Your room Button to Add Your
+            Dormitories
           </v-col>
         </v-row>
       </v-flex>
@@ -77,7 +81,7 @@
                 @click="dialog = !dialog"
                 class="hide-on-xs-only"
               >
-                <v-icon color="#f4511e">mdi-domain</v-icon> Add Dormitory
+                <v-icon color="#f4511e">mdi-domain</v-icon> Add room
               </v-btn>
             </div>
           </div>
@@ -96,24 +100,26 @@
           </v-card-text>
         </v-card> </v-dialog
     ></v-row>
-    <v-row justify="center">
+    <v-row justify="center" align="center" class="max-width">
+      <div></div>
       <v-col
         cols="12"
-        sm="8"
+        sm="12"
         md="6"
-        lg="4"
-        v-for="(dormitory, i) in get_dormData"
+        lg="3"
+        class="ma-0"
+        v-for="(room, i) in get_roomsData"
         :key="i"
       >
         <v-card>
           <!-- <v-card class="mx-auto" max-width="600"> -->
-          <v-carousel cycle hide-delimiter-background>
+          <v-carousel cycle color="orange">
             <v-carousel-item v-for="(image, index) in images" :key="index">
               <v-img
                 :src="image.src"
-                height="400"
+                height="450"
                 class="white--text align-end"
-                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.3)"
+                gradient="to bottom, rgba(255, 165, 0, 0.1), rgba(255, 140, 0, 0.3)"
               >
                 <v-card-title
                   class="white--text text--darken-1 font-weight-bold"
@@ -126,30 +132,28 @@
           <!-- </v-card> -->
           <v-card-text>
             <div class="black--text text--darken-1 font-weight-normal">
-              Dormitory Name: {{ dormitory.name }}
+              Room Name: {{ room.room_number }}
             </div>
             <div class="black--text text--darken-1 font-weight-normal">
-              Address:
-              {{ dormitory.address }}
+              Type :
+              {{ room.room_type }}
             </div>
             <div class="black--text text--light-1 font-weight-normal">
-              City: {{ dormitory.city }}
+              Building-Floor: {{ room.floor_name }}
             </div>
             <div class="black--text text--light-1 font-weight-normal">
-              State/province/Region: {{ dormitory.state }}
+              Capacity: {{ room.capacity }}
             </div>
             <div class="black--text text--light-1 font-weight-normal">
-              ZIP/Postal Code: {{ dormitory.zip }}
+              Monthly-Rent: {{ room.monthly_rent }}
             </div>
-            <div class="black--text text--light-1 font-weight-normal">
-              Country: {{ dormitory.country }}
-            </div>
+            <div class="black--text text--light-1 font-weight-normal"></div>
             <div class="deep-orange--text text--light-4 font-weight-bold">
               Facilities:
             </div>
             <v-chip-group>
               <v-chip
-                v-for="(facility, i) in parseFacilities(dormitory.facilities)"
+                v-for="(facility, i) in parseFacilities(room.facilities)"
                 :key="i"
                 label
                 class="deep-orange--text text--darken-1 font-weight-bold"
@@ -159,18 +163,15 @@
           </v-card-text>
           <v-row justify="center">
             <!-- Edit Icon -->
-            <v-icon
-              color="#f67850"
-              class="ma-2"
-              @click="updateDorm(dormitory.id)"
+            <v-icon color="#f67850" class="ma-2" @click="updateDorm(room.id)"
               >mdi-pencil</v-icon
-            >
+            ><v-text class="co-m">Edite</v-text>
             <!-- Delete Icon -->
             <button>
               <v-icon
                 color="#f67850"
                 class="ma-2"
-                @click="deleteDormitories(dormitory.id)"
+                @click="deleteDormitories(room.id)"
                 >mdi-delete</v-icon
               >
             </button>
@@ -207,16 +208,22 @@ export default {
   data() {
     return {
       search_input: null,
-      dorm_id: undefined,
-      // searchQuery: undefined,
-
+      dorm_id: Cookies.get("dorm_id"),
       images: [
         {
-          src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg",
+          src: "https://images.pexels.com/photos/376531/pexels-photo-376531.jpeg?auto=compress&cs=tinysrgb&w=1600",
           title: "Title 1",
         },
         {
-          src: "https://cdn.vuetifyjs.com/images/carousel/sky.jpg",
+          src: "https://images.pexels.com/photos/2121120/pexels-photo-2121120.jpeg?auto=compress&cs=tinysrgb&w=1600",
+          title: "Title 2",
+        },
+        {
+          src: "https://images.pexels.com/photos/1879061/pexels-photo-1879061.jpeg?auto=compress&cs=tinysrgb&w=1600",
+          title: "Title 1",
+        },
+        {
+          src: "https://images.pexels.com/photos/2121120/pexels-photo-2121120.jpeg?auto=compress&cs=tinysrgb&w=1600",
           title: "Title 2",
         },
       ],
@@ -233,14 +240,14 @@ export default {
   },
   computed: {
     ...mapGetters([
-      "get_dormIsLoading",
-      "get_dormData",
+      "get_roomIsLoading",
+      "get_roomsData",
       "get_dormDeleteIsLoading",
       "get_filterdData",
     ]),
   },
   methods: {
-    ...mapActions(["getUniDormitories", "deleteDormitories", "searchByInput"]),
+    ...mapActions(["getDormRooms"]),
     // A function to parse a JSON-formatted string representing a list of facilities and return it as an array.
     // If there's an error while parsing, it will return an empty array.
     parseFacilities(facilitiesString) {
@@ -275,27 +282,25 @@ export default {
           error;
         });
     },
-
-    async getUniDormitory() {
-      if (this.university_id) {
+    async getUniroom() {
+      if (this.dorm_id) {
         try {
-          let responsedata = await this.getUniDormitories(this.university_id);
-          Cookies.set("responsedormitoryData", responsedata);
+          let responsedata = await this.getDormRooms(this.dorm_id);
+          Cookies.set("roomsData", responsedata);
           this.editDialog === false;
         } catch (error) {
           error;
         }
       }
     },
-    updateDorm(dormitoryId) {
+    updateDorm(roomId) {
       this.editeDialog = !this.editeDialog;
-      this.dorm_id = dormitoryId;
+      this.dorm_id = roomId;
     },
   },
-
   mounted() {
-    this.$root.$on("new_dorm_added", this.getUniDormitory);
-    this.getUniDormitory();
+    this.$root.$on("new_dorm_added", this.getUniroom);
+    this.getUniroom();
     this.getImage();
   },
 };
@@ -303,24 +308,28 @@ export default {
   <style  scoped>
 .lg_nav {
 }
-
-.container-custom {
-  width: 50%;
+.max-width {
+  width: 60%;
+  margin: 0 auto;
 }
-
-.lg {
-  width: 50%;
+.container {
 }
-
 .prev,
 .next {
   color: #f57f17;
+}
+.v-carousel,
+.v-carousel__controls {
+  background: hsl(215, 63%, 75%);
+  height: 20vh;
 }
 
 .sm {
   width: 100%;
 }
-
+.ma-0 {
+  max-height: 50%;
+}
 .my-4 {
   display: flex;
   align-content: start;

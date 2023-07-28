@@ -38,22 +38,15 @@ const mutations = {
     setSearchData( state, input )
     {
         state.filteredDorms_copy = state.dormitoriesData;
-
-        console.log( state.filteredDorms_copy );
-        console.log( input );
-
         if ( input !== "" )
         {
             let filteredDorms = state.dormitoriesData.filter( ( data ) =>
                 data.name.includes( input )
             );
             state.dormitoriesData = filteredDorms;
-            console.log( filteredDorms );
-            console.log( state.dormitoriesData );
         } else if ( input === '' )
         {
             state.dormitoriesData = Cookies.get( "responsedormitoryData" )
-            console.log( state.filteredDorms_copy );
         }
 
     },
@@ -86,9 +79,6 @@ const actions = {
             } );
             commit( 'setLoading', false );
             commit( 'setUniInfoData', response[`data`] );
-
-
-
             Vue.$toast.success( "Your  Dormitories Are Ready ", {
                 timeout: 2000,
             } );

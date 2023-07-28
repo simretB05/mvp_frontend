@@ -5,6 +5,8 @@ import moduleForSignUp from '@/store/modules/moduleForSignUp';
 import moduleForUniProfile from '@/store/modules/moduleForUniProfile';
 import moduleForDormitories from '@/store/modules/moduleForDormitories';
 import moduleForAddingDormitory from '@/store/modules/moduleForAddingDormitory';
+import moduleForRooms from '@/store/modules/moduleForRooms';
+
 
 
 Vue.use( Vuex );
@@ -16,5 +18,6 @@ export default new Vuex.Store( {
     moduleForUniProfile,
     moduleForDormitories,
     moduleForAddingDormitory,
+    moduleForRooms
   }
 } );

@@ -218,6 +218,7 @@
               >
             </button>
           </v-row>
+          <check-rooms-utils :dorm_id="dormitory.id"></check-rooms-utils>
         </v-card>
       </v-col>
       <v-dialog v-model="editeDialog" max-width="500px">
@@ -240,19 +241,19 @@
 import Cookies from "vue-cookies";
 import AddDormitories from "@/components/universities/AddDormitories.vue";
 import UpdateDormitories from "@/components/universities/UpdatDormitories.vue";
+import CheckRoomsUtils from "@/components/utils/CheckRoomsUtils.vue";
 import axios from "axios";
 import { mapActions, mapGetters } from "vuex";
 export default {
   components: {
     AddDormitories,
     UpdateDormitories,
+    CheckRoomsUtils,
   },
   data() {
     return {
       search_input: null,
       dorm_id: undefined,
-      // searchQuery: undefined,
-
       images: [
         {
           src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg",
@@ -312,7 +313,7 @@ export default {
             this.cards[i].src = src;
           }
           this.$store.commit("setUniversityInfo", infoList);
-          this.$root.$emit(`uniData`, this.universityInfo);
+          this.$root.$emit(`dormid`, this.universityInfo);
         })
         .catch((error) => {
           error;
