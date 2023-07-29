@@ -18,22 +18,10 @@ export default {
   },
 
   methods: {
-    getData() {
-      // let responseData = this.getUniData;
-      console.log(this.getUniData); // Corrected the typo: isLoading instead of isLoding
-
-      console.log(this.getIsLoading); // Corrected the typo: isLoading instead of isLoding
-
-      // console.log("this is data");
-      // console.log(this.getUniData);
-      // let id = this.getUniData[0]["id"];
-      // Cookies.set("university_id", id);
-      // console.log(id);
-    },
+    getData() {},
   },
 
   mounted() {
-    console.log("mounted from home");
     this.$on("submited", this.getData);
     this.getData();
   },

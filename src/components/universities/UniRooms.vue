@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="custom-width">
     <v-row align="center">
       <v-col
         cols="12"
@@ -96,7 +96,7 @@
             </v-btn>
           </v-card-title>
           <v-card-text>
-            <add-dormitories></add-dormitories>
+            <add-rooms></add-rooms>
           </v-card-text>
         </v-card> </v-dialog
     ></v-row>
@@ -163,9 +163,14 @@
           </v-card-text>
           <v-row justify="center">
             <!-- Edit Icon -->
-            <v-icon color="#f67850" class="ma-2" @click="updateDorm(room.id)"
-              >mdi-pencil</v-icon
-            ><v-text class="co-m">Edite</v-text>
+            <button
+              class="orange--text text--darken-1 font-weight-bold"
+              @click="updateDorm(room.id)"
+            >
+              <v-icon color="#f67850" back class="ma-0">mdi-pencil</v-icon>
+              Edite
+            </button>
+
             <!-- Delete Icon -->
             <button>
               <v-icon
@@ -196,13 +201,13 @@
 </template>
   <script>
 import Cookies from "vue-cookies";
-import AddDormitories from "@/components/universities/AddDormitories.vue";
+import AddRooms from "@/components/universities/AddRooms.vue";
 import UpdateDormitories from "@/components/universities/UpdatDormitories.vue";
 import axios from "axios";
 import { mapActions, mapGetters } from "vuex";
 export default {
   components: {
-    AddDormitories,
+    AddRooms,
     UpdateDormitories,
   },
   data() {
@@ -306,18 +311,6 @@ export default {
 };
 </script>
   <style  scoped>
-.lg_nav {
-}
-.max-width {
-  width: 60%;
-  margin: 0 auto;
-}
-.container {
-}
-.prev,
-.next {
-  color: #f57f17;
-}
 .v-carousel,
 .v-carousel__controls {
   background: hsl(215, 63%, 75%);
@@ -327,9 +320,7 @@ export default {
 .sm {
   width: 100%;
 }
-.ma-0 {
-  max-height: 50%;
-}
+
 .my-4 {
   display: flex;
   align-content: start;
@@ -346,7 +337,20 @@ export default {
   display: flex;
   justify-content: start;
 }
-
+.custom-width {
+  width: 70%;
+  margin: 0 auto;
+}
+@media only screen and (min-width: 600px) {
+  .custom-width {
+    width: 100%;
+    margin: 0;
+  }
+}
+.custom-width {
+  width: 80%;
+  margin: 0 auto;
+}
 v-btn--icon {
   color: black;
 }

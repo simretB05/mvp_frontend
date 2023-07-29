@@ -1,3 +1,6 @@
+export const types = [
+    "studio unfurnished", "studio furnished", "1 bed unfurnished", "1 bed furnished", "2 bed unfurnished", "2 bed furnished", "3 bed furnished", "3 bed unfurnished", "family unfurnished", "family furnished"]
+
 export const zip_codes = [
     "T0A",
     "T0B",

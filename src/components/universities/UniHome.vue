@@ -20,24 +20,10 @@ export default {
   },
 
   methods: {
-    getData() {
-      // console.log(this.getIsLoading);
-      // if (this.getUniData) {
-      //   console.log("this is data");
-      //   console.log(this.getUniData[0]);
-      //   let id = this.getUniData[0]["id"];
-      //   Cookies.set("university_id", id);
-      //   console.log(id);
-      // } else {
-      //   console.log("getUniData is either undefined or empty.");
-      // }
-    },
+    getData() {},
   },
 
-  mounted() {
-    // console.log("mounted from home");
-    // this.getData();
-  },
+  mounted() {},
 };
 </script>
 

@@ -31,8 +31,8 @@ export default {
   methods: {
     checkDormRooms() {
       if (this.dorm_id) {
-        console.log(this.dorm_id);
         Cookies.set("dorm_id", this.dorm_id);
+        this.$root.$emit("dorm_id", this.dorm_id);
         this.$router.push(`/rooms`);
       }
     },

@@ -303,43 +303,39 @@ export default {
 
   methods: {
     ...mapActions(["signUpUni"]),
-    methods: {
-      addressCheck() {
-        this.errorMessages =
-          this.address && !this.name ? `Hey! I'm required` : "";
 
-        return true;
-      },
-      resetForm() {
-        this.errorMessages = [];
-        this.formHasErrors = false;
+    addressCheck() {
+      this.errorMessages =
+        this.address && !this.name ? `Hey! I'm required` : "";
 
-        Object.keys(this.form).forEach((f) => {
-          this.$refs[f].reset();
-        });
-      },
+      return true;
+    },
+    resetForm() {
+      this.errorMessages = [];
+      this.formHasErrors = false;
+      Object.keys(this.form).forEach((f) => {
+        this.$refs[f].reset();
+      });
+    },
 
-      async submit() {
-        this.formHasErrors = false;
-
-        Object.keys(this.form).forEach((f) => {
-          if (!this.form[f]) this.formHasErrors = true;
-
-          this.$refs[f].validate(true);
-        });
-        if (this.formHasErrors === false) {
-          try {
-            let responsedata = await this.signUpUni(this.form);
-            Cookies.set("responseData", responsedata);
-            Cookies.set("university_id", responsedata[0][`id`]);
-            Cookies.set("token", responsedata[0][`token`]);
-            this.$root.$emit("universityLoggedIn", responsedata);
-            this.$router.push(`/university-home`);
-          } catch (error) {
-            error;
-          }
+    async submit() {
+      this.formHasErrors = false;
+      Object.keys(this.form).forEach((f) => {
+        if (!this.form[f]) this.formHasErrors = true;
+        this.$refs[f].validate(true);
+      });
+      if (this.formHasErrors === false) {
+        try {
+          let responsedata = await this.signUpUni(this.form);
+          Cookies.set("responseData", responsedata);
+          Cookies.set("university_id", responsedata[0][`id`]);
+          Cookies.set("token", responsedata[0][`token`]);
+          this.$root.$emit("universityLoggedIn", responsedata);
+          this.$router.push(`/university-home`);
+        } catch (error) {
+          error;
         }
-      },
+      }
     },
   },
 };

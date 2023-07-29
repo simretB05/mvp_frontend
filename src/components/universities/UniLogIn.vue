@@ -105,9 +105,6 @@ export default {
     name() {
       this.errorMessages = "";
     },
-    isLoading(newLoadingState) {
-      console.log("isLoading (watcher):", newLoadingState);
-    },
   },
   methods: {
     ...mapActions(["logInUni"]),
@@ -141,9 +138,7 @@ export default {
     },
   },
 
-  mounted() {
-    console.log("isLoading:", this.getIsLoading);
-  },
+  mounted() {},
 };
 </script>
 <style scoped>

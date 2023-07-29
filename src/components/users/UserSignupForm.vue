@@ -218,7 +218,6 @@ export default {
         })
         .catch((error) => {
           error;
-          console.log(this.form);
         });
     },
   },
