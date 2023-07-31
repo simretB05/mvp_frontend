@@ -367,7 +367,7 @@ export default {
 
 .my-4 {
   display: flex;
-  align-content: start;
+  align-content: flex-start;
   margin: 32px;
 }
 

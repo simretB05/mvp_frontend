@@ -1,15 +1,15 @@
 <template>
-    <div>
-<h2>Notifications</h2>
-    </div>
+  <div>
+    <h2>Notifications</h2>
+  </div>
 </template>
 
 <script>
-    export default {
-        
-    }
+export default {};
 </script>
 
 <style  scoped>
-
+main {
+  min-height: 80vh;
+}
 </style>

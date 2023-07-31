@@ -207,7 +207,14 @@ export default {
         dormitory_id: this.dormitory_id,
       };
     },
-    ...mapGetters(["getUniInfoData"]),
+    ...mapGetters([
+      "getUniInfoData",
+      "get_roomIsLoading",
+      "get_roomsData",
+      "get_roomsImageData",
+      "get_dormDeleteIsLoading",
+      "get_filterdData",
+    ]),
   },
 
   watch: {
@@ -244,8 +251,7 @@ export default {
       if (this.token && this.formHasErrors === false) {
         try {
           let responsedata = await this.addRoom(this.form);
-          Cookies.set("responseData", responsedata);
-          this.$root.$emit("new_dorm_added");
+          responsedata;
         } catch (error) {
           error;
         }

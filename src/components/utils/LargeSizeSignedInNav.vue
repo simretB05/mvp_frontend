@@ -1,42 +1,38 @@
 <template>
-  <v-layout row wrap justify-end>
-    <v-flex flex cols="3">
-      <v-row class="flex-row justify-end" wrap justify-end>
-        <v-col
-          class="flex-none wrap"
-          cols="3"
-          v-for="(item, i) in loginLinks"
-          :key="i"
-          link
-        >
-          <v-list color="transparent" class="nav-list">
-            <v-list-item
-              class="padding-none"
-              :active-class="i === clickedItemIndex ? 'active-item' : ''"
-              @click="clickedItemIndex = i"
-            >
-              <v-divider class="mx-2" color="#e3e6e3" vertical></v-divider>
-              <v-list-item-icon cols="12" class="mrx-1 mx-0 px-0">
-                <v-icon class="mx-2" color="#f4511e">{{ item.icon }}</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content class="two-columb-layout">
-                <v-list-item-title class="white--text light subtitle-3">{{
-                  item.title
-                }}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-        </v-col>
-      </v-row>
-    </v-flex>
-  </v-layout>
+  <v-container class="custom-c">
+    <v-layout align-center>
+      <v-card class="custom-v">
+        <v-list class="menu-list" dense>
+          <v-list-item
+            class="menu-list_item"
+            v-for="(item, i) in loginLinks"
+            :key="i"
+            link
+            router
+            :to="item.route"
+            :class="{ 'last-item-button': i === loginLinks.length - 1 }"
+          >
+            <!-- <v-divider class="mx-2" color="#e3e6e3" vertical></v-divider> -->
+            <v-list-item-icon>
+              <v-icon class="icon" color="#f4511e">{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title
+                class="white--text text--darken-1 font-weight-bold mx-3"
+                >{{ item.title }}</v-list-item-title
+              >
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-card>
+    </v-layout>
+  </v-container>
 </template>
 <script>
 export default {
   data() {
     return {
       drawer: false,
-      clickedItemIndex: null,
 
       loginLinks: [
         { icon: "mdi-home", title: "Home", route: "/" },
@@ -53,47 +49,73 @@ export default {
           title: "Profile/Settings",
           route: "/profile-settings",
         },
+        {
+          icon: "mdi-logout",
+          title: "Logout",
+          route: "/logout",
+        },
       ],
     };
   },
 };
 </script>
+
 <style scoped>
 .theme--light.v-list-item:not(.v-list-item--active):not(
     .v-list-item--disabled
   ) {
-  color: #b3d7c2;
+  width: 0%;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
 }
-.lg_nav {
+.v-list-item {
+  display: flex;
+  justify-items: center;
+}
+.custom-c {
+  display: flex;
+  justify-content: flex-end;
+  width: 70%;
+}
+.custom-v {
   width: 100%;
-  display: grid;
-  place-items: end;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-items: flex-end;
 }
-.my-5 {
-  padding: 16px;
+.v-list-item--dense .v-list-item__icon,
+.v-list--dense .v-list-item .v-list-item__icon {
+  margin: 0;
+  display: flex;
 }
-
-.flex-none {
-  flex: 0;
+.menu-list {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 0vh;
+  background-color: transparent;
   padding: 0;
 }
+.last-item-button {
+  background-color: #061e36;
+  color: #fff;
+  padding: 0px 8px;
+  border-radius: 4px;
+  width: 10%;
 
-.flex-row {
-  /* display: flex;
-  justify-content: end; */
-  width: 100%;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease;
 }
-
-.padding-none {
-  padding: 0 !important;
+.v-icon.v-icon {
+  margin-top: 12px;
 }
-.v-list {
-  width: 100;
-  display: grid;
-  padding: 16px;
-}
-.na .v-list-item-title {
-  color: #12f0dd;
-  width: 100%;
+/* Bounce effect on click */
+.last-item-button:active {
+  transform: scale(0.95); /* Scale down the element when clicked */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Increase shadow size when clicked */
 }
 </style>

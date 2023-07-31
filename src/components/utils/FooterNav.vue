@@ -8,16 +8,15 @@
     >
       <v-container>
         <v-layout row wrap>
-          <v-flex
-            class="footer my-7"
-            xs="12"
-            sm="6"
-            md="4"
-            lg="3"
-            v-for="(item, i) in items"
-            :key="i"
-          >
-            <v-btn text :to="item.route">
+          <v-flex class="footer my-7" xs="12" sm="6" md="4" lg="3">
+            <v-btn
+              text
+              v-for="(item, i) in loginLinks"
+              :key="i"
+              link
+              router
+              :to="item.route"
+            >
               <v-icon class="mr-2" color="#f4511e">{{ item.icon }}</v-icon>
               <span class="white--text">{{ item.title }}</span>
             </v-btn>
@@ -47,7 +46,7 @@
 <script>
 export default {
   data: () => ({
-    items: [
+    loginLinks: [
       { icon: "mdi-home", title: "Home", route: "/" },
       { icon: "mdi-school", title: "University Listing", route: "/listings" },
       { icon: "mdi-domain", title: "List Your Place", route: "/signup" },

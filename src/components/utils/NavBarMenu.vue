@@ -98,7 +98,7 @@ export default {
 }
 nav {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
 }
 .my-5 {
   padding: 16px;

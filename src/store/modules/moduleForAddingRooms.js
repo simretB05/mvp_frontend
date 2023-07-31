@@ -7,8 +7,8 @@ import Toast from "vue-toastification";
 // Initialize Vue instance and use Vue Toastification plugin
 Vue.use( Toast );
 
-const url = process.env.VUE_APP_BASE_URL + '/api/dorm-room';
-const urlUpdate = process.env.VUE_APP_BASE_URL + '/api/update-dormitory';
+let url = process.env.VUE_APP_BASE_URL + '/api/dorm-room';
+let urlUpdate = process.env.VUE_APP_BASE_URL + '/api/update-dormitory';
 
 
 // State object
@@ -35,7 +35,6 @@ const mutations = {
         if ( state.roomsData !== [] )
         {
             state.roomsData = state.roomsData.filter( data => data.id != id )
-
         }
     },
     setSearchData( state, input )
@@ -80,7 +79,6 @@ const actions = {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
-
             } );
             commit( 'setLoading', false );
             commit( 'roomsData', response[`data`] );
@@ -106,8 +104,6 @@ const actions = {
 
     async updatingDormitory( { commit }, form, )
     {
-
-
         commit( 'setLoading', true );
         try
         {
@@ -138,9 +134,6 @@ const actions = {
             // throw error; // Throw the error to be caught by the component
         }
     },
-
-
-
 };
 
 export default {

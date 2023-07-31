@@ -178,13 +178,14 @@ export default {
         .request({
           url: `${process.env.VUE_APP_BASE_URL}/api/university-image`,
           params: {
-            university_id: this.getUniversity_id,
+            university_id: this.university_id,
           },
           responseType: "blob",
         })
         .then((response) => {
           let infoList = response[`data`];
           let src = URL.createObjectURL(response[`data`]);
+          console.log(src);
           for (let i = 0; i < this.cards.length; i++) {
             this.cards[i].src = src;
           }

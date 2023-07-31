@@ -21,7 +21,7 @@
       cols="12"
       v-if="get_roomIsLoading && get_roomsData > [0]"
     >
-      Getting Your Dormitories
+      Getting Your Rooms
       <v-col cols="12">
         <v-progress-linear color="#f4511e" indeterminate rounded height="12">
         </v-progress-linear>
@@ -51,8 +51,7 @@
             cols="12"
             v-else
           >
-            No Dormitories Currently, use the Add Your room Button to Add Your
-            Dormitories
+            No Rooms Currently, use the Add Your room Button to Add Your Rooms
           </v-col>
         </v-row>
       </v-flex>
@@ -112,11 +111,13 @@
         :key="i"
       >
         <v-card>
-          <!-- <v-card class="mx-auto" max-width="600"> -->
           <v-carousel cycle color="orange">
-            <v-carousel-item v-for="(image, index) in images" :key="index">
+            <v-carousel-item
+              v-for="(image, index) in getRoomImagesByRoomId(room.id)"
+              :key="index"
+            >
               <v-img
-                :src="image.src"
+                :src="image"
                 height="450"
                 class="white--text align-end"
                 gradient="to bottom, rgba(255, 165, 0, 0.1), rgba(255, 140, 0, 0.3)"
@@ -129,7 +130,6 @@
               </v-img>
             </v-carousel-item>
           </v-carousel>
-          <!-- </v-card> -->
           <v-card-text>
             <div class="black--text text--darken-1 font-weight-normal">
               Room Name: {{ room.room_number }}
@@ -170,13 +170,9 @@
               <v-icon color="#f67850" back class="ma-0">mdi-pencil</v-icon>
               Edite
             </button>
-
             <!-- Delete Icon -->
             <button>
-              <v-icon
-                color="#f67850"
-                class="ma-2"
-                @click="deleteDormitories(room.id)"
+              <v-icon color="#f67850" class="ma-2" @click="deleteRooms(room.id)"
                 >mdi-delete</v-icon
               >
             </button>
@@ -203,7 +199,6 @@
 import Cookies from "vue-cookies";
 import AddRooms from "@/components/universities/AddRooms.vue";
 import UpdateDormitories from "@/components/universities/UpdatDormitories.vue";
-import axios from "axios";
 import { mapActions, mapGetters } from "vuex";
 export default {
   components: {
@@ -214,27 +209,8 @@ export default {
     return {
       search_input: null,
       dorm_id: Cookies.get("dorm_id"),
-      images: [
-        {
-          src: "https://images.pexels.com/photos/376531/pexels-photo-376531.jpeg?auto=compress&cs=tinysrgb&w=1600",
-          title: "Title 1",
-        },
-        {
-          src: "https://images.pexels.com/photos/2121120/pexels-photo-2121120.jpeg?auto=compress&cs=tinysrgb&w=1600",
-          title: "Title 2",
-        },
-        {
-          src: "https://images.pexels.com/photos/1879061/pexels-photo-1879061.jpeg?auto=compress&cs=tinysrgb&w=1600",
-          title: "Title 1",
-        },
-        {
-          src: "https://images.pexels.com/photos/2121120/pexels-photo-2121120.jpeg?auto=compress&cs=tinysrgb&w=1600",
-          title: "Title 2",
-        },
-      ],
       dialog: false,
       editeDialog: false,
-      university_id: Cookies.get(`university_id`),
       card: [
         {
           src: "",
@@ -247,12 +223,13 @@ export default {
     ...mapGetters([
       "get_roomIsLoading",
       "get_roomsData",
+      "get_roomsImageData",
       "get_dormDeleteIsLoading",
       "get_filterdData",
     ]),
   },
   methods: {
-    ...mapActions(["getDormRooms"]),
+    ...mapActions(["getDormRooms", "getRoomsImage", "deleteRooms"]),
     // A function to parse a JSON-formatted string representing a list of facilities and return it as an array.
     // If there's an error while parsing, it will return an empty array.
     parseFacilities(facilitiesString) {
@@ -265,27 +242,20 @@ export default {
         return [];
       }
     },
-    getImage() {
-      axios
-        .request({
-          url: `${process.env.VUE_APP_BASE_URL}/api/university-image`,
-          params: {
-            university_id: this.university_id,
-          },
-          responseType: "blob",
-        })
-        .then((response) => {
-          let infoList = response[`data`];
-          let src = URL.createObjectURL(response[`data`]);
-          for (let i = 0; i < this.cards.length; i++) {
-            this.cards[i].src = src;
-          }
-          this.$store.commit("setUniversityInfo", infoList);
-          this.$root.$emit(`uniData`, this.universityInfo);
-        })
-        .catch((error) => {
-          error;
-        });
+    getRoomImagesByRoomId(roomId) {
+      if (this.get_roomsImageData) {
+        return this.get_roomsImageData[roomId];
+      }
+    },
+    async getRoomsImageData() {
+      if (this.dorm_id) {
+        try {
+          let imageListResp = await this.getRoomsImage();
+          imageListResp;
+        } catch (error) {
+          console.log(error);
+        }
+      }
     },
     async getUniroom() {
       if (this.dorm_id) {
@@ -298,15 +268,14 @@ export default {
         }
       }
     },
-    updateDorm(roomId) {
+    updateRoom(roomId) {
       this.editeDialog = !this.editeDialog;
       this.dorm_id = roomId;
     },
   },
   mounted() {
-    this.$root.$on("new_dorm_added", this.getUniroom);
+    this.getRoomsImageData();
     this.getUniroom();
-    this.getImage();
   },
 };
 </script>
@@ -323,7 +292,7 @@ export default {
 
 .my-4 {
   display: flex;
-  align-content: start;
+  align-content: flex-start;
   margin: 32px;
 }
 
@@ -335,7 +304,7 @@ export default {
 
 .search {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
 }
 .custom-width {
   width: 70%;

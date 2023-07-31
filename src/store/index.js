@@ -20,6 +20,6 @@ export default new Vuex.Store( {
     moduleForDormitories,
     moduleForAddingDormitory,
     moduleForRooms,
-    moduleForAddingRooms
+    moduleForAddingRooms,
   }
 } );
