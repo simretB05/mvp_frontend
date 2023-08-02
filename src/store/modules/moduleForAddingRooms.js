@@ -81,7 +81,7 @@ const actions = {
                 },
             } );
             commit( 'setLoading', false );
-            commit( 'roomsData', response[`data`] );
+            commit( 'setRoomInfoData', response[`data`] );
 
             Vue.$toast.success( "New Room has been Added ", {
                 timeout: 2000,

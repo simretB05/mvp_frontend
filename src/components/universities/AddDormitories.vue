@@ -87,6 +87,24 @@
                 required
                 attach
               ></v-autocomplete>
+              <!--  Image file input -->
+              <v-file-input
+                class="text-custom-class"
+                label="Dormitory Profile Images"
+                filled
+                multiple
+                prepend-icon="mdi-camera"
+                ref="file"
+                v-model="file"
+                :rules="[
+                  rulesImages.required,
+                  rulesImages.size_value,
+                  rulesImages.format,
+                ]"
+                accept="image/png, image/jpeg, image/bmp"
+                :error-messages="errorMessages"
+                placeholder=" Select Multiple Images"
+              ></v-file-input>
             </v-flex>
           </v-layout>
         </v-card-text>
@@ -133,6 +151,7 @@ export default {
       formHasErrors: false,
       errorMessages: "",
       facilities: [],
+      file: [],
       city: null,
       name: null,
       address: null,
@@ -149,6 +168,36 @@ export default {
           return true;
         },
       },
+      rulesImages: {
+        required: (file) => {
+          if (!file.length > 0) {
+            return "'This field is required'";
+          }
+          return true;
+        },
+        size_value: (file) => {
+          file.forEach((data) => {
+            if (data && data.size / (1024 * 1024) > 2000) {
+              return "Image size should be less than 2 MB!";
+            }
+          });
+          return true;
+        },
+        format: (file) => {
+          let array_of_allowed_files = ["png", "jpeg", "jpg", "gif"];
+          file.forEach((data) => {
+            if (data && typeof data.name === "string") {
+              let file_extension = data.name
+                .slice(((data.name.lastIndexOf(".") - 1) >>> 0) + 2)
+                .toLowerCase();
+              if (!array_of_allowed_files.includes(file_extension)) {
+                return ` ${file_extension} is Invalid file format . Only JPG, JPEG, and PNG files are allowed.`; ///?????
+              }
+            }
+          });
+          return true;
+        },
+      },
     };
   },
   computed: {
@@ -161,6 +210,7 @@ export default {
         zip: this.zip,
         country: this.country,
         facilities: JSON.stringify(this.facilities),
+        file: this.file,
       };
     },
     ...mapGetters(["getUniInfoData"]),

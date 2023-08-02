@@ -6,71 +6,62 @@ import Toast from "vue-toastification";
 
 // Initialize Vue instance and use Vue Toastification plugin
 Vue.use( Toast );
-const url = process.env.VUE_APP_BASE_URL + '/api/all-dormitories';
-const urlDelete = process.env.VUE_APP_BASE_URL + '/api/dormitory';
-let urlImg = process.env.VUE_APP_BASE_URL + '/api/dorm-image';
-
+let url = process.env.VUE_APP_BASE_URL + '/api/get-all-rooms';
+let urlDelete = process.env.VUE_APP_BASE_URL + '/api/dorm-room';
+let urlImg = process.env.VUE_APP_BASE_URL + '/api/room-image';
 // State object
 const state = {
     error: null,
-    isLoadingDormitories: false,
-    dormitoriesData: undefined,
-    isLoadingForDorm: false,
+    isLoadingRooms: false,
+    roomsData: undefined,
     filteredData: undefined,
-    dormImageData: undefined,
-    filteredDorms_copy: []
+    isLoadingRoomsImages: false,
+    roomsImageData: undefined,
 };
 // Mutations object
 const mutations = {
-    setLoading( state, isLoadingDormitories )
+    setLoading( state, isLoadingRooms )
     {
-        state.isLoadingDormitories = isLoadingDormitories;
+        state.isLoadingRooms = isLoadingRooms;
     },
-    setUniInfoData( state, dormitoriesData )
+    setAllRoomInfoData( state, roomsData )
     {
-        state.dormitoriesData = dormitoriesData;
+        state.roomsData = roomsData;
     },
-    setdeleteData( state, id )
-    {
-        if ( state.dormitoriesData !== [] )
-        {
-            state.dormitoriesData = state.dormitoriesData.filter( data => data.id != id )
 
+    setdeleteRoom( state, id )
+    {
+        if ( state.roomsData !== [] )
+        {
+            state.roomsData = state.roomsData.filter( data => data.id != id )
         }
     },
-    setDormImageoData( state, dormImageData )
+    setRoomImageoData( state, roomsImageData )
     {
-        state.dormImageData = dormImageData
+        state.roomsImageData = roomsImageData;
         let groupedImages = {};
         let contentType = 'image/png';
+
         // Loop through each room image and group them by room_id
-        for ( const roomImage of state.dormImageData )
+        for ( const roomImage of state.roomsImageData )
         {
             // Object destructuring to extract properties from roomImage
-            // Destructure the 'roomImage' object to extract the 'room_id' and 'images' properties.
-            const { dormitory_id, images } = roomImage
-            // Make a copy of the 'images' data.
-
+            const { room_id, images } = roomImage
             let imageToChangeToBlob = images
-            // Convert the base64-encoded 'imageToChangeToBlob' data to binary data using 'atob' function.
             let binaryData = atob( imageToChangeToBlob );
-            // Create an array 'byteNumbers' to hold the character codes of the binary data.
             let byteNumbers = new Array( binaryData.length );
-            // Convert the binary data to an array of integers by retrieving their character codes.
             for ( let j = 0; j < binaryData.length; j++ )
             {
                 byteNumbers[j] = binaryData.charCodeAt( j );
             }
-            // Create a 'byteArray' using the 'byteNumbers' array, representing the binary data as Uint8Array.
             let byteArray = new Uint8Array( byteNumbers );
-            // Create a 'Blob' object from the 'byteArray', specifying the 'contentType' of the blob.
             let blob = new Blob( [byteArray], { type: contentType } );
-            // Create a URL representing the 'blob' data. This URL can be used as the 'src' for an image tag.
             let blobUrl = URL.createObjectURL( blob );
-            // Use a conditional operator to check if the room_id exists in groupedImages
-            groupedImages[dormitory_id] ? groupedImages[dormitory_id].push( blobUrl ) : groupedImages[dormitory_id] = [blobUrl];
 
-            state.dormImageData = groupedImages
+            // Use a conditional operator to check if the room_id exists in groupedImages
+            groupedImages[room_id] ? groupedImages[room_id].push( blobUrl ) : groupedImages[room_id] = [blobUrl];
+
+            state.roomsImageData = groupedImages
             // Cookies.set( "newImageDataFromCookies", groupedImages )
             // state.roomsImageData[0] ? state.roomsImageData = Cookies.get( "newImageDataFromCookies" ) : state.roomsImageData = groupedImages
         }
@@ -80,17 +71,16 @@ const mutations = {
         state.filteredDorms_copy = state.dormitoriesData;
         if ( input.length || typeof input === 'string' || input.trim() !== '' )
         {
-            let filteredDorms = state.dormitoriesData.filter( ( data ) =>
+            let filteredRooms = state.roomData.filter( ( data ) =>
                 data.name.includes( input )
             );
-            state.dormitoriesData = filteredDorms;
+            state.dormitoriesData = filteredRooms;
         } else if ( input === '' )
         {
-            state.dormitoriesData = Cookies.get( "responsedormitoryData" )
+            state.roomData = Cookies.get( "roomsData" )
         }
 
     },
-
     setError( state, error )
     {
         state.error = error;
@@ -98,29 +88,29 @@ const mutations = {
 };
 // Getters object
 const getters = {
-    get_dormData: ( state ) => state.dormitoriesData,
-    get_dormIsLoading: ( state ) => state.isLoadingDormitories,
-    get_dormInfoError: ( state ) => state.error,
-    get_dormDeleteIsLoading: ( state ) => state.isLoadingDormitories,
-    get_dormDeleteInfoError: ( state ) => state.error,
-    get_filterdData: ( state ) => state.filteredData,
-    get_dormImageData: ( state ) => state.dormImageData
+    get_allRoomsData: ( state ) => state.roomsData,
+    get_allRoomIsLoading: ( state ) => state.isLoadingRooms,
+    get_allRoomsInfoError: ( state ) => state.error,
+    get_allRoomsDeleteIsLoading: ( state ) => state.isLoadingDormitories,
+    get_allAllroomsDeleteInfoError: ( state ) => state.error,
+    get_allFilterRoomdData: ( state ) => state.filteredData,
+    get_allRoomsImageData: ( state ) => state.roomsImageData,
+    get_allIsLodingImages: ( state ) => state.isLoadingRoomsImages,
+    get_allRoomsImageError: ( state ) => state.error,
 };
 // Actions object
 const actions = {
-    async getUniDormitories( { commit }, id )
+    async getAllDormRooms( { commit }, )
     {
         commit( 'setLoading', true );
         try
         {
             const response = await axios.get( url, {
-                params: {
-                    university_id: id,
-                },
+
             } );
             commit( 'setLoading', false );
-            commit( 'setUniInfoData', response[`data`] );
-            Vue.$toast.success( "Your  Dormitories Are Ready ", {
+            commit( 'setAllRoomInfoData', response[`data`] );
+            Vue.$toast.success( "Your  Rooms Are Ready ", {
                 timeout: 2000,
             } );
             return response.data; // Return the response data to the component
@@ -137,7 +127,7 @@ const actions = {
         }
     },
     //   Action for  Deleting  Dormitories
-    async deleteDormitories( { commit }, id )
+    async deleteRooms( { commit }, id )
     {
         commit( 'setLoading', true );
         try
@@ -147,7 +137,7 @@ const actions = {
                     id: id,
                 },
             } );
-            commit( 'setdeleteData', id );
+            commit( 'setdeleteRoom', id );
             Vue.$toast.success( `Successfuly deleted dormitory with the id ${ id }`, {
                 timeout: 2000,
             } );
@@ -167,7 +157,7 @@ const actions = {
         }
     },
     //   Action for getting Dormitories Images
-    async getDormImage( { commit }, )
+    async getRoomsImage( { commit }, )
     {
         commit( 'setLoading', true );
         try
@@ -175,7 +165,7 @@ const actions = {
             const response = await axios.get( urlImg, {
             } );
             commit( 'setLoading', false );
-            commit( 'setDormImageoData', response['data'][`images`] );
+            commit( 'setRoomImageoData', response['data'][`images`] );
 
             Vue.$toast.success( "Rooms images are ready ", {
                 timeout: 2000,

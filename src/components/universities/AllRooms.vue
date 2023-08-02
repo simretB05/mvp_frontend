@@ -13,13 +13,13 @@
           Rooms Settings Page
         </h2>
 
-        <p class="text-center">Browse and manage Rooms and facilities Here</p>
+        <p class="text-center">Browse All Dormitory Rooms Here</p>
       </v-col>
     </v-row>
     <v-col
       class="text-subtitle-1 deep-orange--text text--darken-3 font-weight-bold text-center"
       cols="12"
-      v-if="get_roomIsLoading && get_roomsData > [0]"
+      v-if="get_roomIsLoading && get_allRoomsData > [0]"
     >
       Getting Your Rooms
       <v-col cols="12">
@@ -30,26 +30,9 @@
     <v-layout row class="lg_nav" cols="12">
       <v-flex xs-12>
         <v-row class="justify-center">
-          <v-col cols="12" sm="12" md="12" lg="12" v-if="get_roomsData > [0]">
-            <v-row>
-              <v-col cols="12">
-                <v-card>
-                  <v-card-title primary class="headline">Card 1</v-card-title>
-                  <v-card-text> Content for Card 1 goes here... </v-card-text>
-                </v-card>
-              </v-col>
-              <v-col cols="12">
-                <v-card>
-                  <v-card-title primary class="headline">Card 2</v-card-title>
-                  <v-card-text> Content for Card 2 goes here... </v-card-text>
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-col>
           <v-col
             class="text-subtitle-1 deep-orange--text text--darken-3 font-weight-bold text-center"
             cols="12"
-            v-else
           >
             No Rooms Currently, use the Add Your room Button to Add Your Rooms
           </v-col>
@@ -68,37 +51,7 @@
         ></v-text-field>
       </v-col>
     </v-row>
-    <v-row>
-      <v-row>
-        <v-col cols="12" sm="12" align-start>
-          <div class="text-center">
-            <div class="my-4">
-              <v-btn
-                x-large
-                color="#061e36"
-                dark
-                @click="dialog = !dialog"
-                class="hide-on-xs-only"
-              >
-                <v-icon color="#f4511e">mdi-domain</v-icon> Add room
-              </v-btn>
-            </div>
-          </div>
-        </v-col>
-      </v-row>
-      <v-dialog v-model="dialog" max-width="500px">
-        <v-card>
-          <v-card-title>
-            <v-spacer></v-spacer>
-            <v-btn icon @click="dialog = false">
-              <v-icon color="#f4511e">mdi-close</v-icon>
-            </v-btn>
-          </v-card-title>
-          <v-card-text>
-            <add-rooms></add-rooms>
-          </v-card-text>
-        </v-card> </v-dialog
-    ></v-row>
+
     <v-row justify="center" align="center" class="max-width">
       <div></div>
       <v-col
@@ -107,7 +60,7 @@
         md="6"
         lg="3"
         class="ma-0"
-        v-for="(room, i) in get_roomsData"
+        v-for="(room, i) in get_allRoomsData"
         :key="i"
       >
         <v-card>
@@ -195,20 +148,19 @@
     </v-row>
   </v-container>
 </template>
-  <script>
+    <script>
 import Cookies from "vue-cookies";
-import AddRooms from "@/components/universities/AddRooms.vue";
 import UpdateDormitories from "@/components/universities/UpdatDormitories.vue";
 import { mapActions, mapGetters } from "vuex";
 export default {
   components: {
-    AddRooms,
     UpdateDormitories,
   },
   data() {
     return {
       search_input: null,
       dorm_id: Cookies.get("dorm_id"),
+      university_id: Cookies.get("university_id"),
       dialog: false,
       editeDialog: false,
       card: [
@@ -222,15 +174,14 @@ export default {
   computed: {
     ...mapGetters([
       "get_roomIsLoading",
-      "get_roomsData",
+      "get_allRoomsData",
       "get_roomsImageData",
-      "get_roomIsLoading",
       "get_dormDeleteIsLoading",
       "get_filterdData",
     ]),
   },
   methods: {
-    ...mapActions(["getDormRooms", "getRoomsImage", "deleteRooms"]),
+    ...mapActions(["getAllDormRooms", "getRoomsImage", "deleteRooms"]),
     // A function to parse a JSON-formatted string representing a list of facilities and return it as an array.
     // If there's an error while parsing, it will return an empty array.
     parseFacilities(facilitiesString) {
@@ -243,12 +194,12 @@ export default {
       }
     },
     getRoomImagesByRoomId(roomId) {
-      if (roomId !== undefined && this.get_roomsImageData) {
+      if (this.get_allRoomsData && roomId) {
         return this.get_roomsImageData[roomId];
       }
     },
     async getRoomsImageData() {
-      if (this.dorm_id) {
+      if (this.university_id) {
         try {
           let imageListResp = await this.getRoomsImage();
           imageListResp;
@@ -257,11 +208,11 @@ export default {
         }
       }
     },
-    async getUniroom() {
-      if (this.dorm_id) {
+    async getAllUniroom() {
+      if (this.university_id) {
         try {
-          let responsedata = await this.getDormRooms(this.dorm_id);
-          Cookies.set("roomsData", responsedata);
+          let responsedata = await this.getAllDormRooms();
+          responsedata;
           this.editDialog === false;
         } catch (error) {
           error;
@@ -274,17 +225,14 @@ export default {
     },
   },
   mounted() {
-    this.$root.$on("new_room_added", this.getUniroom);
-    this.$root.$on("new_room_added", this.getRoomImagesByRoomId);
-    this.$root.$on("dorm_id", this.getUniroom);
-
+    this.$root.$on("new_room_added", this.getAllUniroom);
     this.getRoomsImageData();
     this.getRoomImagesByRoomId();
-    this.getUniroom();
+    this.getAllUniroom();
   },
 };
 </script>
-  <style  scoped>
+    <style  scoped>
 .v-carousel,
 .v-carousel__controls {
   background: hsl(215, 63%, 75%);
@@ -329,7 +277,7 @@ v-btn--icon {
   color: black;
 }
 </style>
-  
-  
-  
-  
+    
+    
+    
+    

@@ -10,6 +10,7 @@ import UniProfileSettingsPage from '@/views/universities/UniProfileSettingsPage.
 import UniDormitoriesPage from '@/views/universities/UniDormitoriesPage'
 import UniRoomsPage from '@/views/universities/UniRoomsPage'
 import UniNotificationsPage from '@/views/universities/UniNotificationsPage'
+import AllUniRoomsPage from '@/views/universities/AllUniRoomsPage'
 
 
 
@@ -61,6 +62,11 @@ const routes = [
     path: '/rooms',
     name: 'rooms',
     component: UniRoomsPage
+  },
+  {
+    path: '/all-rooms',
+    name: 'all rooms',
+    component: AllUniRoomsPage
   },
   {
     path: '/notifications',

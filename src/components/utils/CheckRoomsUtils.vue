@@ -10,7 +10,7 @@
             @click="checkDormRooms"
             class="hide-on-xs-only"
           >
-            <v-icon color="#f4511e">mdi-bed-empty</v-icon> Check Rooms
+            <v-icon color="#f4511e">mdi-bed-empty</v-icon> Dorm Room Listing
           </v-btn>
         </div>
       </div>

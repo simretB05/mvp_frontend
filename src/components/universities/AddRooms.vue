@@ -160,32 +160,44 @@ export default {
       dormitory_id: Cookies.get("dorm_id"),
 
       rules: {
+        // Validation rule for checking if a file is required
         required: (file) => {
           if (!file.length > 0) {
+            // If the file array is empty, return an error message indicating that the field is required.
             return "'This field is required'";
           }
+          // If the file array is not empty, return true to indicate that the validation passed.
           return true;
         },
         size_value: (file) => {
+          // Validation rule for checking the size of the file(s)
           file.forEach((data) => {
+            // Check each file in the file array and compare its size to 2 MB (2000 KB).
             if (data && data.size / (1024 * 1024) > 2000) {
-              return "Avatar size should be less than 2 MB!";
+              // If any file exceeds 2 MB, return an error message indicating that the avatar size should be less than 2 MB.
+              return "Image size should be less than 2 MB!";
             }
           });
+          // If all files pass the size check, return true to indicate that the validation passed.
           return true;
         },
         format: (file) => {
+          // Validation rule for checking the file format
           let array_of_allowed_files = ["png", "jpeg", "jpg", "gif"];
           file.forEach((data) => {
+            // Extract the file extension from the file name and convert it to lowercase.
             if (data && typeof data.name === "string") {
-              let file_extension = data.name.slice(
-                ((data.name.lastIndexOf(".") - 1) >>> 0) + 2
-              );
+              let file_extension = data.name
+                .slice(((data.name.lastIndexOf(".") - 1) >>> 0) + 2)
+                .toLowerCase();
+              // Check if the file extension is in the list of allowed file formats.
               if (!array_of_allowed_files.includes(file_extension)) {
+                // If the file format is not allowed, return an error message indicating the allowed formats.
                 return ` ${file_extension} is Invalid file format . Only JPG, JPEG, and PNG files are allowed.`; ///?????
               }
             }
           });
+          // If all files have valid formats, return true to indicate that the validation passed.
           return true;
         },
       },
@@ -228,8 +240,14 @@ export default {
     resetForm() {
       this.errorMessages = [];
       this.formHasErrors = false;
-
+      // Iterate through the keys of the 'this.form' object (likely a Vue.js data object).
       Object.keys(this.form).forEach((f) => {
+        // If the reference has a 'validate' function, call it with the argument 'true'.
+        // This triggers the validation for the form element associated with the current key.
+        this.$refs[f].validate(true);
+        // After validating the form element, reset it to its initial state.
+        // This is done using the 'reset' function available on the form element's reference.
+        // It may be used to clear any validation messages or revert the form element's value to its initial state.
         if (this.$refs[f] && this.$refs[f].validate) {
           this.$refs[f].validate(true);
           this.$refs[f].reset();
@@ -252,6 +270,7 @@ export default {
         try {
           let responsedata = await this.addRoom(this.form);
           responsedata;
+          this.$root.$emit("new_room_added");
         } catch (error) {
           error;
         }
@@ -266,6 +285,7 @@ export default {
   display: grid;
   grid-template-columns: 1fr;
 }
+
 .text-custom-class {
   /* padding: 10px;
   margin: 20px; */

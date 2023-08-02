@@ -42,7 +42,8 @@ export default {
           route: "/university-home",
         },
         { icon: "mdi-view-list", title: "Dormitories", route: "/dormitories" },
-        { icon: "mdi-bed-empty", title: "Rooms", route: "/rooms" },
+        // { icon: "mdi-bed-empty", title: "Rooms", route: "/rooms" },
+        { icon: "mdi-bed-empty", title: "all Dorm-Rooms", route: "/all-rooms" },
         { icon: "mdi-bell", title: "Notifications", route: "/notifications" },
         {
           icon: "mdi-account-cog",

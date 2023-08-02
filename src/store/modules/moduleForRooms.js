@@ -69,15 +69,15 @@ const mutations = {
     setSearchData( state, input )
     {
         state.filteredDorms_copy = state.dormitoriesData;
-        if ( input !== "" )
+        if ( input.length || typeof input === 'string' || input.trim() !== '' )
         {
-            let filteredDorms = state.roomData.filter( ( data ) =>
+            let filteredRooms = state.roomData.filter( ( data ) =>
                 data.name.includes( input )
             );
-            state.dormitoriesData = filteredDorms;
+            state.dormitoriesData = filteredRooms;
         } else if ( input === '' )
         {
-            state.dormitoriesData = Cookies.get( "roomsData" )
+            state.roomData = Cookies.get( "roomsData" )
         }
 
     },
@@ -89,7 +89,7 @@ const mutations = {
 // Getters object
 const getters = {
     get_roomsData: ( state ) => state.roomsData,
-    get_roomIsLoading: ( state ) => state.isLoadingDormitories,
+    get_roomIsLoading: ( state ) => state.isLoadingRooms,
     get_roomsInfoError: ( state ) => state.error,
     get_roomsDeleteIsLoading: ( state ) => state.isLoadingDormitories,
     get_roomsDeleteInfoError: ( state ) => state.error,
@@ -188,7 +188,8 @@ const actions = {
     },
     searchByInput( { commit }, input, )
     {
-        commit( 'setSearchData', input );
+        if ( !input || input !== undefined )
+            commit( 'setSearchData', input );
     },
 
 };

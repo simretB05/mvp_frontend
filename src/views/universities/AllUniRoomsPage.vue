@@ -1,16 +1,13 @@
 <template>
   <main>
-    <user-home-page></user-home-page>
+    <all-rooms></all-rooms>
   </main>
 </template>
 
 <script>
-import UserHomePage from "@/components/users/UserHomeComponent.vue";
-
+import AllRooms from "@/components/universities/AllRooms.vue";
 export default {
-  components: {
-    UserHomePage,
-  },
+  components: { AllRooms },
 };
 </script>
 
