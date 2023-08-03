@@ -101,7 +101,6 @@
         </v-card> </v-dialog
     ></v-row>
     <v-row justify="center" align="center" class="max-width">
-      <div></div>
       <v-col
         cols="12"
         sm="12"
@@ -118,7 +117,7 @@
               :key="index"
             >
               <v-img
-                :src="image"
+                :src="image.blobUrl"
                 height="450"
                 class="white--text align-end"
                 gradient="to bottom, rgba(255, 165, 0, 0.1), rgba(255, 140, 0, 0.3)"
@@ -148,6 +147,15 @@
             <div class="black--text text--light-1 font-weight-normal">
               Monthly-Rent: {{ room.monthly_rent }}
             </div>
+            <div
+              class="black--text text--light-1 font-weight-normal"
+              v-if="room.avilablity_status === 1"
+            >
+              Avilablity_status: Avilable
+            </div>
+            <div v-else class="black--text text--light-1 font-weight-normal">
+              Avilablity_status: Not Avilable
+            </div>
             <div class="black--text text--light-1 font-weight-normal"></div>
             <div class="deep-orange--text text--light-4 font-weight-bold">
               Facilities:
@@ -166,7 +174,7 @@
             <!-- Edit Icon -->
             <button
               class="orange--text text--darken-1 font-weight-bold"
-              @click="updateDorm(room.id)"
+              @click="updateRoom(room.id)"
             >
               <v-icon color="#f67850" back class="ma-0">mdi-pencil</v-icon>
               Edite
@@ -189,7 +197,7 @@
             </v-btn>
           </v-card-title>
           <v-card-text>
-            <update-dormitories :dorm_id="dorm_id"></update-dormitories>
+            <update-room :room_id="room_id"></update-room>
           </v-card-text>
         </v-card>
       </v-dialog>
@@ -199,24 +207,21 @@
   <script>
 import Cookies from "vue-cookies";
 import AddRooms from "@/components/universities/AddRooms.vue";
-import UpdateDormitories from "@/components/universities/UpdatDormitories.vue";
+import updateRoom from "@/components/universities/UpdatRoom";
+
 import { mapActions, mapGetters } from "vuex";
 export default {
   components: {
     AddRooms,
-    UpdateDormitories,
+    updateRoom,
   },
   data() {
     return {
       search_input: null,
       dorm_id: Cookies.get("dorm_id"),
       dialog: false,
+      room_id: undefined,
       editeDialog: false,
-      card: [
-        {
-          src: "",
-        },
-      ],
       dormitories: [],
     };
   },
@@ -254,7 +259,7 @@ export default {
           let imageListResp = await this.getRoomsImage();
           imageListResp;
         } catch (error) {
-          console.log(error);
+          error;
         }
       }
     },
@@ -271,14 +276,18 @@ export default {
     },
     updateRoom(roomId) {
       this.editeDialog = !this.editeDialog;
-      this.dorm_id = roomId;
+      this.room_id = roomId;
     },
   },
   mounted() {
     this.$root.$on("new_room_added", this.getUniroom);
     this.$root.$on("new_room_added", this.getRoomImagesByRoomId);
     this.$root.$on("dorm_id", this.getUniroom);
+    this.$root.$on("close", this.getUniroom);
+    this.$root.$on("close", this.getRoomImagesByRoomId);
+    this.$root.$on("close", this.getRoomsImageData);
 
+    this.$root.$on("close", this.updateRoom);
     this.getRoomsImageData();
     this.getRoomImagesByRoomId();
     this.getUniroom();

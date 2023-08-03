@@ -134,7 +134,6 @@
   </v-row>
 </template>
 <script>
-// import axios from "axios";
 import { types, facilitiesData } from "@/components/utils/MiscellaneousUtils";
 import Cookies from "vue-cookies";
 import { mapActions, mapGetters } from "vuex";
@@ -158,7 +157,6 @@ export default {
       file: [],
       token: Cookies.get("token"),
       dormitory_id: Cookies.get("dorm_id"),
-
       rules: {
         // Validation rule for checking if a file is required
         required: (file) => {

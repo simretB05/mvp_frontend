@@ -255,7 +255,6 @@ export default {
     this.$root.$on("close", this.getUniDormitory);
     this.$root.$on("close", this.getDormsImageData);
     this.$root.$on("close", this.updateDorm);
-
     this.getUniDormitory();
     this.getDormsImageData();
   },

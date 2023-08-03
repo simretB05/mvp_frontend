@@ -80,12 +80,18 @@ export default {
   methods: {
     listenToEvent() {
       this.id = Cookies.get("university_id");
+      console.log(this.id);
+      if (this.id !== this.id) {
+        this.$toast.success("Successfully Logged  out", {
+          timeout: 2000,
+        });
+      }
     },
   },
   mounted() {
-    this.$root.$on("universityLoggedIn", (id) => {
-      this.id = id;
-    });
+    this.$root.$on("universityLoggedIn", this.listenToEvent);
+    this.$root.$on("loggedOut", this.listenToEvent);
+
     this.listenToEvent();
   },
 };

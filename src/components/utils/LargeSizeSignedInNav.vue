@@ -10,6 +10,7 @@
             link
             router
             :to="item.route"
+            @click="i === loginLinks.length - 1 ? logout(item) : null"
             :class="{ 'last-item-button': i === loginLinks.length - 1 }"
           >
             <!-- <v-divider class="mx-2" color="#e3e6e3" vertical></v-divider> -->
@@ -29,13 +30,17 @@
   </v-container>
 </template>
 <script>
+import Cookies from "vue-cookies";
+import { mapActions } from "vuex";
+
 export default {
   data() {
     return {
+      token: Cookies.get("token"),
+
       drawer: false,
 
       loginLinks: [
-        { icon: "mdi-home", title: "Home", route: "/" },
         {
           icon: "mdi-school",
           title: "University Home",
@@ -53,10 +58,31 @@ export default {
         {
           icon: "mdi-logout",
           title: "Logout",
-          route: "/logout",
+          route: "/",
         },
       ],
     };
+  },
+  methods: {
+    ...mapActions(["logOutUni"]),
+    async logout() {
+      if (this.token) {
+        try {
+          let logoutResp = await this.logOutUni(this.token);
+          logoutResp;
+          Cookies.remove("roomsData");
+          Cookies.remove("dorm_id");
+          Cookies.remove("token");
+          Cookies.remove("university_id");
+          Cookies.remove("responsedormitoryData");
+          Cookies.remove("responseUniData");
+          Cookies.remove("responseData");
+          this.$root.$emit("loggedOut");
+        } catch (error) {
+          error;
+        }
+      }
+    },
   },
 };
 </script>

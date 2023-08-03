@@ -5,62 +5,70 @@
         <v-card-text class="pa-12">
           <v-layout>
             <v-flex class="make-grid pxa-7">
-              <!-- dormitory name input -->
+              <input type="hidden" ref="dormitory_id" value="" />
+              <!-- Room Number input -->
               <v-text-field
                 class="text-custom-class"
-                ref="name"
-                v-model="name"
-                label="Dormitory Name"
+                ref="room_number"
+                v-model="room_number"
+                :error-messages="errorMessages"
+                label="Room Number"
+                required
               ></v-text-field>
-              <!-- dormitory address input -->
+              <!-- Floor Name  input -->
               <v-text-field
                 class="text-custom-class"
-                ref="address"
-                v-model="address"
-                label="Dormitory Address"
+                ref="floor_name"
+                v-model="floor_name"
+                :error-messages="errorMessages"
+                label="Floor Name"
                 placeholder="Snowy Rock Pl"
                 counter="25"
+                required
               ></v-text-field>
-              <!-- city input -->
+              <!-- Room type input -->
               <v-autocomplete
                 class="text-custom-class"
-                ref="city"
-                v-model="city"
-                :items="cityData"
+                ref="room_type"
+                v-model="room_type"
+                :items="types"
+                :error-messages="errorMessages"
                 placeholder="Select..."
-                label="City"
+                label="Types Of Rooms"
+                required
               ></v-autocomplete>
-              <!-- state/province/region input -->
+              <!-- Capacity  Input -->
               <v-autocomplete
                 class="text-custom-class"
-                ref="state"
-                v-model="state"
-                :rules="[() => !!state || 'This field is required']"
-                label="State/Province/Region"
-                :items="states"
-                placeholder="AB"
-              ></v-autocomplete>
-              <!-- zip / postal code input -->
-              <v-autocomplete
-                class="text-custom-class"
-                ref="zip"
-                v-model="zip"
-                :items="zipData"
-                label="ZIP / Postal Code"
+                ref="capacity"
+                v-model="capacity"
+                :error-messages="errorMessages"
+                :items="capacities"
+                label="Room Capacity"
                 placeholder="Select..."
                 required
               ></v-autocomplete>
-              <!-- country input -->
+              <!-- Avilablity Status Input -->
               <v-autocomplete
                 class="text-custom-class"
-                ref="country"
-                v-model="country"
-                :rules="[() => !!country || 'This field is required']"
-                :items="countries"
-                label="Country"
-                placeholder="Canada"
+                ref="avilablity_status"
+                v-model="avilablity_status"
+                :error-messages="errorMessages"
+                :items="stats"
+                label="Room Availability"
+                placeholder="Select..."
                 required
               ></v-autocomplete>
+              <!-- Price Input -->
+              <v-text-field
+                class="text-custom-class"
+                ref="monthly_rent"
+                v-model="monthly_rent"
+                :error-messages="errorMessages"
+                label="Monthly Price"
+                placeholder=" Rent Price"
+                required
+              ></v-text-field>
               <!-- Facilities Dropdown  -->
               <v-autocomplete
                 class="text-custom-class"
@@ -68,19 +76,21 @@
                 facilities
                 v-model="facilities"
                 :items="facilitiesArray"
+                :error-messages="errorMessages"
                 label="Facilities"
                 multiple
                 chips
                 required
                 attach
               ></v-autocomplete>
+              <!--  Image file input -->
               <v-list-item-title>
                 Click and Pick Images to Update</v-list-item-title
               >
               <v-list class="custom-list">
                 <v-list-item-group
                   max-width="400"
-                  v-for="(image, index) in getDormImagesByDormId(dorm_id)"
+                  v-for="(image, index) in get_roomsImageByRoomId(room_id)"
                   :key="index"
                 >
                   <v-list-item style="flex-direction: row; padding: 0">
@@ -120,7 +130,9 @@
                       </v-btn>
                     </v-card-title>
                     <v-card-text>
-                      <edite-image-box :imageId="imageId"></edite-image-box>
+                      <editeroom-image-box
+                        :imageId="imageId"
+                      ></editeroom-image-box>
                     </v-card-text>
                   </v-card>
                 </v-dialog>
@@ -148,71 +160,68 @@
               <span>Refresh form</span>
             </v-tooltip>
           </v-slide-x-reverse-transition>
-          <v-btn color="#f4511e" text @click="submitUpdate"> Submit </v-btn>
+          <v-btn color="#f4511e" text @click="submitUpdate">
+            Save Changes</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-col>
   </v-row>
 </template>
-<script>
+  <script>
 // import axios from "axios";
-import {
-  cities,
-  zip_codes,
-  facilitiesData,
-} from "@/components/utils/MiscellaneousUtils";
-import Cookies from "vue-cookies";
-import EditeImageBox from "@/components/utils/EditeImageBox.vue";
+import { types, facilitiesData } from "@/components/utils/MiscellaneousUtils";
+// import Cookies from "vue-cookies";
 import { mapActions, mapGetters } from "vuex";
+import EditeroomImageBox from "@/components/utils/EditeRoomImageBox.vue";
 export default {
   components: {
-    EditeImageBox,
+    EditeroomImageBox,
   },
   props: {
-    dorm_id: Number,
+    room_id: Number,
   },
   data() {
     return {
-      src: undefined,
       editeImageDialog: false,
-      countries: ["Canada"],
-      country: null,
+      types: types,
+      floor_name: null,
+      room_number: null,
+      room_type: null,
+      capacities: [1, 2, 3, 4, 6],
+      capacity: null,
+      stats: ["Available", "Not Available"],
+      status: null,
+      avilablity_status: null,
+      monthly_rent: null,
       facilitiesArray: facilitiesData,
       formHasErrors: false,
       errorMessages: "",
       facilities: [],
-      city: null,
-      name: null,
-      address: null,
-      cityData: cities,
-      state: null,
-      states: ["AB"],
-      zipData: zip_codes,
-      zip: null,
-      file: undefined,
-      token: Cookies.get("token"),
+      file: [],
       imageId: undefined,
     };
   },
   computed: {
     form() {
+      let available = this.avilablity_status === "Available" ? 1 : 0;
       return {
-        id: this.dorm_id,
-        name: this.name ? this.name : null,
-        address: this.address ? this.address : null,
-        city: this.city ? this.city : null,
-        state: this.state,
-        zip: this.zip ? this.zip : null,
-        country: this.country,
+        id: this.room_id,
+        room_number: this.room_number ? this.room_number : null,
+        floor_name: this.floor_name ? this.floor_name : null,
+        room_type: this.room_type ? this.room_type : null,
+        capacity: this.capacity ? this.capacity : null,
+        avilablity_status: available !== null ? available : null,
+        monthly_rent: this.monthly_rent ? this.monthly_rent : null,
         facilities:
           this.facilities && this.facilities.length > 0
             ? JSON.stringify(this.facilities)
             : null,
-        file: this.file ? this.file : null,
         image_id: this.imageId ? this.imageId : null,
+        file: this.file ? this.file : null,
       };
     },
-    ...mapGetters(["getUniInfoData", "get_dormImageData"]),
+    ...mapGetters(["getUniInfoData", "get_roomsImageData"]),
   },
 
   watch: {
@@ -221,7 +230,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["addDormitory", "updatingDormitory"]),
+    ...mapActions(["addDormitory", "updatingRoom"]),
 
     resetForm() {
       this.errorMessages = [];
@@ -232,22 +241,17 @@ export default {
         }
       });
     },
-    getDormImagesByDormId(dormId) {
-      if (this.get_dormImageData && dormId) {
-        return this.get_dormImageData[dormId];
+    get_roomsImageByRoomId(roormId) {
+      if (this.get_roomsImageData && roormId) {
+        return this.get_roomsImageData[roormId];
       }
     },
     async submitUpdate() {
       this.formHasErrors = false;
       console.log(this.form);
-      if (this.form.state === null || this.form.country === null) {
-        this.formHasErrors = true;
-        this.$refs.state.validate(true);
-        this.$refs.country.validate(true);
-      }
-      if (this.dorm_id && this.formHasErrors === false) {
+      if (this.room_id) {
         try {
-          let responsedata = await this.updatingDormitory(this.form);
+          let responsedata = await this.updatingRoom(this.form);
           responsedata;
           this.$root.$emit("close");
         } catch (error) {
@@ -266,12 +270,12 @@ export default {
     },
   },
   mounted() {
-    this.getDormImagesByDormId();
+    this.get_roomsImageByRoomId();
     this.$root.$on("image_update", this.updateImage);
   },
 };
 </script>
-<style scoped>
+  <style scoped>
 .make-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -289,7 +293,7 @@ export default {
 }
 .text-custom-class {
   /* padding: 10px;
-  margin: 20px; */
+    margin: 20px; */
   width: 100%;
 }
 </style>

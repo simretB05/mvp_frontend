@@ -28,7 +28,13 @@
         </v-list-item>
       </v-list>
       <div class="pa-2">
-        <v-btn depressed class="white--text" color="#f4511e" block>
+        <v-btn
+          depressed
+          class="white--text"
+          color="#f4511e"
+          block
+          @click="logout"
+        >
           Logout
         </v-btn>
       </div>
@@ -37,11 +43,14 @@
 </template>
 
 <script>
+import Cookies from "vue-cookies";
+import { mapActions } from "vuex";
+
 export default {
   data() {
     return {
+      token: Cookies.get("token"),
       loginLinks: [
-        { icon: "mdi-home", title: "Home", route: "/" },
         {
           icon: "mdi-school",
           title: "University Home",
@@ -58,6 +67,31 @@ export default {
       ],
     };
   },
+  methods: {
+    ...mapActions(["logOutUni"]),
+
+    async logout() {
+      if (this.token) {
+        try {
+          let logoutResp = await this.logOutUni(this.token);
+          logoutResp;
+          Cookies.remove("roomsData");
+          Cookies.remove("dorm_id");
+          Cookies.remove("token");
+          Cookies.remove("university_id");
+          Cookies.remove("responsedormitoryData");
+          Cookies.remove("responseUniData");
+          Cookies.remove("responseData");
+          this.$root.$emit("loggedOut");
+
+          this.$router.push(`/`);
+        } catch (error) {
+          error;
+        }
+      }
+    },
+  },
+  mounted() {},
 };
 </script>
 

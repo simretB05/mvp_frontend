@@ -8,6 +8,8 @@ import moduleForAddingDormitory from '@/store/modules/moduleForAddingDormitory';
 import moduleForRooms from '@/store/modules/moduleForRooms';
 import moduleForAddingRooms from '@/store/modules/moduleForAddingRooms';
 import moduleForGettingAllRooms from '@/store/modules/moduleForGettingAllRooms';
+import moduleForLogOut from '@/store/modules/moduleForLogOut';
+
 
 
 
@@ -22,6 +24,7 @@ export default new Vuex.Store( {
     moduleForAddingDormitory,
     moduleForRooms,
     moduleForAddingRooms,
-    moduleForGettingAllRooms
+    moduleForGettingAllRooms,
+    moduleForLogOut
   }
 } );

@@ -46,7 +46,7 @@ const mutations = {
         for ( const roomImage of state.roomsImageData )
         {
             // Object destructuring to extract properties from roomImage
-            const { room_id, images } = roomImage
+            const { room_id, images, id } = roomImage
             let imageToChangeToBlob = images
             let binaryData = atob( imageToChangeToBlob );
             let byteNumbers = new Array( binaryData.length );
@@ -59,12 +59,14 @@ const mutations = {
             let blobUrl = URL.createObjectURL( blob );
 
             // Use a conditional operator to check if the room_id exists in groupedImages
-            groupedImages[room_id] ? groupedImages[room_id].push( blobUrl ) : groupedImages[room_id] = [blobUrl];
+            groupedImages[room_id] ? groupedImages[room_id].push( { id, blobUrl } ) : groupedImages[room_id] = [{ id, blobUrl }];
 
-            state.roomsImageData = groupedImages
             // Cookies.set( "newImageDataFromCookies", groupedImages )
             // state.roomsImageData[0] ? state.roomsImageData = Cookies.get( "newImageDataFromCookies" ) : state.roomsImageData = groupedImages
         }
+        state.roomsImageData = JSON.parse( JSON.stringify( groupedImages ) )
+
+
     },
     setSearchData( state, input )
     {

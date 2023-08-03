@@ -15,6 +15,20 @@
         <p class="text-center">Browse All Dormitory Rooms Here</p>
       </v-col>
     </v-row>
+    <v-card>
+      <v-card-title></v-card-title>
+      <!-- Checkbox for product selection -->
+      <v-card-text>
+        <v-checkbox label="Select By Type" hide-details></v-checkbox>
+        <v-checkbox label="Select By Monthly-Rent" hide-details></v-checkbox>
+        <v-checkbox
+          color=""
+          label="Select By Capacity"
+          hide-details
+        ></v-checkbox>
+        <v-checkbox label="Select By Building floor " hide-details></v-checkbox>
+      </v-card-text>
+    </v-card>
     <v-col
       class="text-subtitle-1 deep-orange--text text--darken-3 font-weight-bold text-center"
       cols="12"
@@ -70,7 +84,7 @@
               :key="index"
             >
               <v-img
-                :src="image"
+                :src="image.blobUrl"
                 height="450"
                 class="white--text align-end"
                 gradient="to bottom, rgba(255, 165, 0, 0.1), rgba(255, 140, 0, 0.3)"

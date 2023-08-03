@@ -8,7 +8,7 @@ import Toast from "vue-toastification";
 Vue.use( Toast );
 
 let url = process.env.VUE_APP_BASE_URL + '/api/dorm-room';
-let urlUpdate = process.env.VUE_APP_BASE_URL + '/api/update-dormitory';
+let urlUpdate = process.env.VUE_APP_BASE_URL + '/api/update-room';
 
 
 // State object
@@ -102,7 +102,7 @@ const actions = {
     },
     /// updating dormitories
 
-    async updatingDormitory( { commit }, form, )
+    async updatingRoom( { commit }, form, )
     {
         commit( 'setLoading', true );
         try
@@ -110,7 +110,6 @@ const actions = {
             const response = await axios.patch( urlUpdate, form, {
                 headers: {
                     "Content-Type": "multipart/form-data",
-                    token: state.token
                 },
 
             } );
