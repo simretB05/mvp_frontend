@@ -74,6 +74,57 @@
                 required
                 attach
               ></v-autocomplete>
+              <v-list-item-title>
+                Click and Pick Images to Update</v-list-item-title
+              >
+              <v-list class="custom-list">
+                <v-list-item-group
+                  max-width="400"
+                  v-for="(image, index) in getDormImagesByDormId(dorm_id)"
+                  :key="index"
+                >
+                  <v-list-item style="flex-direction: row; padding: 0">
+                    <v-btn
+                      style="
+                        height: 87px;
+                        min-width: 99px;
+                        width: 80px;
+                        border-radius: 0;
+                        margin: 5px;
+                      "
+                      @click="editeImage(image.id)"
+                    >
+                      <v-list-item-avatar
+                        style="
+                          height: 67px;
+                          min-width: 80px;
+                          width: 80px;
+                          border-radius: 0;
+                          display: flex;
+                          justify-items: center;
+                          align-items: center;
+                          margin: 0;
+                        "
+                      >
+                        <v-img :src="image.blobUrl" />
+                      </v-list-item-avatar>
+                    </v-btn>
+                  </v-list-item>
+                </v-list-item-group>
+                <v-dialog v-model="editeImageDialog" max-width="500px">
+                  <v-card>
+                    <v-card-title>
+                      <v-spacer></v-spacer>
+                      <v-btn icon @click="editeImageDialog = !editeImageDialog">
+                        <v-icon color="#f4511e">mdi-close</v-icon>
+                      </v-btn>
+                    </v-card-title>
+                    <v-card-text>
+                      <edite-image-box :imageId="imageId"></edite-image-box>
+                    </v-card-text>
+                  </v-card>
+                </v-dialog>
+              </v-list>
             </v-flex>
           </v-layout>
         </v-card-text>
@@ -111,13 +162,19 @@ import {
   facilitiesData,
 } from "@/components/utils/MiscellaneousUtils";
 import Cookies from "vue-cookies";
+import EditeImageBox from "@/components/utils/EditeImageBox.vue";
 import { mapActions, mapGetters } from "vuex";
 export default {
+  components: {
+    EditeImageBox,
+  },
   props: {
     dorm_id: Number,
   },
   data() {
     return {
+      src: undefined,
+      editeImageDialog: false,
       countries: ["Canada"],
       country: null,
       facilitiesArray: facilitiesData,
@@ -132,7 +189,9 @@ export default {
       states: ["AB"],
       zipData: zip_codes,
       zip: null,
+      file: undefined,
       token: Cookies.get("token"),
+      imageId: undefined,
     };
   },
   computed: {
@@ -149,9 +208,11 @@ export default {
           this.facilities && this.facilities.length > 0
             ? JSON.stringify(this.facilities)
             : null,
+        file: this.file ? this.file : null,
+        image_id: this.imageId ? this.imageId : null,
       };
     },
-    ...mapGetters(["getUniInfoData"]),
+    ...mapGetters(["getUniInfoData", "get_dormImageData"]),
   },
 
   watch: {
@@ -171,6 +232,11 @@ export default {
         }
       });
     },
+    getDormImagesByDormId(dormId) {
+      if (this.get_dormImageData && dormId) {
+        return this.get_dormImageData[dormId];
+      }
+    },
     async submitUpdate() {
       this.formHasErrors = false;
       if (this.form.state === null || this.form.country === null) {
@@ -188,14 +254,39 @@ export default {
         }
       }
     },
+    editeImage(imageId) {
+      this.editeImageDialog = !this.editeImageDialog;
+      this.imageId = imageId;
+    },
+
+    updateImage(image) {
+      this.form.file = image.file;
+      this.editeImageDialog = !this.editeImageDialog;
+      console.log(image);
+      console.log(this.form);
+    },
   },
-  mounted() {},
+  mounted() {
+    this.getDormImagesByDormId();
+    this.$root.$on("image_update", this.updateImage);
+  },
 };
 </script>
 <style scoped>
 .make-grid {
   display: grid;
   grid-template-columns: 1fr;
+}
+
+.v-avatar .v-list-item__avatar {
+  height: 67px;
+  min-width: 118px;
+  width: 119px;
+}
+.v-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 .text-custom-class {
   /* padding: 10px;

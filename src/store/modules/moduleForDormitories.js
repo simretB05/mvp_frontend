@@ -48,7 +48,7 @@ const mutations = {
         {
             // Object destructuring to extract properties from roomImage
             // Destructure the 'roomImage' object to extract the 'room_id' and 'images' properties.
-            const { dormitory_id, images } = roomImage
+            const { dormitory_id, images, id } = roomImage
             // Make a copy of the 'images' data.
 
             let imageToChangeToBlob = images
@@ -68,12 +68,13 @@ const mutations = {
             // Create a URL representing the 'blob' data. This URL can be used as the 'src' for an image tag.
             let blobUrl = URL.createObjectURL( blob );
             // Use a conditional operator to check if the room_id exists in groupedImages
-            groupedImages[dormitory_id] ? groupedImages[dormitory_id].push( blobUrl ) : groupedImages[dormitory_id] = [blobUrl];
-
-            state.dormImageData = groupedImages
+            groupedImages[dormitory_id] ? groupedImages[dormitory_id].push( { id, blobUrl } ) : groupedImages[dormitory_id] = [{ id, blobUrl }];
             // Cookies.set( "newImageDataFromCookies", groupedImages )
             // state.roomsImageData[0] ? state.roomsImageData = Cookies.get( "newImageDataFromCookies" ) : state.roomsImageData = groupedImages
         }
+        state.dormImageData = JSON.parse( JSON.stringify( groupedImages ) )
+
+
     },
     setSearchData( state, input )
     {

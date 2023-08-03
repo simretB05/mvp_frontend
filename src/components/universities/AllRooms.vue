@@ -9,17 +9,16 @@
         align-items="start"
       >
         <h2 class="green--text-center font-weight-bold mb-4">
-          <v-icon color="#f4511e" class="mr-2">mdi-cog</v-icon>
-          Rooms Settings Page
+          <v-icon color="#f4511e" class="mr-2">mdi-monitor</v-icon>
+          Rooms Display Page
         </h2>
-
         <p class="text-center">Browse All Dormitory Rooms Here</p>
       </v-col>
     </v-row>
     <v-col
       class="text-subtitle-1 deep-orange--text text--darken-3 font-weight-bold text-center"
       cols="12"
-      v-if="get_roomIsLoading && get_allRoomsData > [0]"
+      v-if="get_allRoomIsLoading && !get_allRoomsData > [0]"
     >
       Getting Your Rooms
       <v-col cols="12">
@@ -33,8 +32,9 @@
           <v-col
             class="text-subtitle-1 deep-orange--text text--darken-3 font-weight-bold text-center"
             cols="12"
+            v-if="!get_allRoomIsLoading && !get_allRoomsData > [0]"
           >
-            No Rooms Currently, use the Add Your room Button to Add Your Rooms
+            No Rooms Currently, Please Try Again
           </v-col>
         </v-row>
       </v-flex>
@@ -114,48 +114,16 @@
               >
             </v-chip-group>
           </v-card-text>
-          <v-row justify="center">
-            <!-- Edit Icon -->
-            <button
-              class="orange--text text--darken-1 font-weight-bold"
-              @click="updateDorm(room.id)"
-            >
-              <v-icon color="#f67850" back class="ma-0">mdi-pencil</v-icon>
-              Edite
-            </button>
-            <!-- Delete Icon -->
-            <button>
-              <v-icon color="#f67850" class="ma-2" @click="deleteRooms(room.id)"
-                >mdi-delete</v-icon
-              >
-            </button>
-          </v-row>
         </v-card>
       </v-col>
-      <v-dialog v-model="editeDialog" max-width="500px">
-        <v-card>
-          <v-card-title>
-            <v-spacer></v-spacer>
-            <v-btn icon @click="editeDialog = false">
-              <v-icon color="#f4511e">mdi-close</v-icon>
-            </v-btn>
-          </v-card-title>
-          <v-card-text>
-            <update-dormitories :dorm_id="dorm_id"></update-dormitories>
-          </v-card-text>
-        </v-card>
-      </v-dialog>
     </v-row>
   </v-container>
 </template>
     <script>
 import Cookies from "vue-cookies";
-import UpdateDormitories from "@/components/universities/UpdatDormitories.vue";
 import { mapActions, mapGetters } from "vuex";
 export default {
-  components: {
-    UpdateDormitories,
-  },
+  components: {},
   data() {
     return {
       search_input: null,
@@ -173,7 +141,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      "get_roomIsLoading",
+      "get_allRoomIsLoading",
       "get_allRoomsData",
       "get_roomsImageData",
       "get_dormDeleteIsLoading",

@@ -97,6 +97,6 @@ export default {
 }
 .col {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }
 </style>

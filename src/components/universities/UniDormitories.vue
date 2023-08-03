@@ -81,7 +81,7 @@
               :key="index"
             >
               <v-img
-                :src="image"
+                :src="image.blobUrl"
                 height="400"
                 class="white--text align-end"
                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.3)"
@@ -252,6 +252,10 @@ export default {
   },
   mounted() {
     this.$root.$on("new_dorm_added", this.getUniDormitory);
+    this.$root.$on("close", this.getUniDormitory);
+    this.$root.$on("close", this.getDormsImageData);
+    this.$root.$on("close", this.updateDorm);
+
     this.getUniDormitory();
     this.getDormsImageData();
   },
@@ -292,7 +296,7 @@ export default {
 
 .search {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
 }
 
 v-btn--icon {

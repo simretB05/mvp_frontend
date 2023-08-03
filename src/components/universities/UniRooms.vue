@@ -51,7 +51,8 @@
             cols="12"
             v-else
           >
-            No Rooms Currently, use the Add Your room Button to Add Your Rooms
+            No Rooms In This Dormitory Currently, use the Add Your room Button
+            to Add Your Rooms
           </v-col>
         </v-row>
       </v-flex>
