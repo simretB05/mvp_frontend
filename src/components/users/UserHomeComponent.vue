@@ -86,7 +86,6 @@ export default {
       }
 
       this.combinedGroups = combinedGroups;
-      console.log(this.combinedGroups);
     },
     // getRoomImagesByRoomId(roomId) {
     //   if (roomId !== undefined && this.get_roomsImageData) {
