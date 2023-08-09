@@ -6,7 +6,7 @@ import Toast from "vue-toastification";
 
 // Initialize Vue instance and use Vue Toastification plugin
 Vue.use( Toast );
-let url = process.env.VUE_APP_BASE_URL + '/api/get-all-university';
+let url = process.env.VUE_APP_BASE_URL + '/api/all-university';
 let urlImg = process.env.VUE_APP_BASE_URL + '/api/all-university-image';
 // State object
 const state = {
