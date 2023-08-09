@@ -6,27 +6,27 @@ import Toast from "vue-toastification";
 
 // Initialize Vue instance and use Vue Toastification plugin
 Vue.use( Toast );
-let url = process.env.VUE_APP_BASE_URL + '/api/all-rooms';
-let urlDelete = process.env.VUE_APP_BASE_URL + '/api/dorm-room';
-let urlImg = process.env.VUE_APP_BASE_URL + '/api/room-image';
+let url = process.env.VUE_APP_BASE_URL + '/api/get-all-university';
+let urlImg = process.env.VUE_APP_BASE_URL + '/api/all-university-image';
 // State object
 const state = {
     error: null,
-    isLoadingRooms: false,
-    roomsData: [],
-    isLoadingRoomsImages: false,
-    roomsImageData: undefined,
+    isLoadingUniversities: false,
+    universitiesData: [],
+    isLoadingUnisImages: false,
+    unisImageData: {},
 };
 // Mutations object
 const mutations = {
-    setLoading( state, isLoadingRooms )
+    setLoading( state, isLoadingUnis )
     {
-        state.isLoadingRooms = isLoadingRooms;
+        state.isLoadingUniversities = isLoadingUnis
     },
-    setRoomInfoData( state, roomsData )
+    setAllUniData( state, unisData )
     {
-        state.roomsData = roomsData;
+        state.universitiesData = unisData;
     },
+
     setdeleteRoom( state, id )
     {
         if ( state.roomsData !== [] )
@@ -34,17 +34,19 @@ const mutations = {
             state.roomsData = state.roomsData.filter( data => data.id != id )
         }
     },
-    setRoomImageoData( state, roomsImageData )
+    setUniImageoData( state, unisImageData )
     {
-        state.roomsImageData = roomsImageData;
+        state.unisImageData = unisImageData;
         let groupedImages = {};
         let contentType = 'image/png';
+
         // Loop through each room image and group them by room_id
-        for ( const roomImage of state.roomsImageData )
+        for ( const unisImage of state.unisImageData )
         {
             // Object destructuring to extract properties from roomImage
-            const { room_id, images, id } = roomImage
-            let imageToChangeToBlob = images
+            const { filename } = unisImage
+            let uni_id = 1
+            let imageToChangeToBlob = filename
             let binaryData = atob( imageToChangeToBlob );
             let byteNumbers = new Array( binaryData.length );
             for ( let j = 0; j < binaryData.length; j++ )
@@ -54,17 +56,18 @@ const mutations = {
             let byteArray = new Uint8Array( byteNumbers );
             let blob = new Blob( [byteArray], { type: contentType } );
             let blobUrl = URL.createObjectURL( blob );
-            // Use a conditional operator to check if the room_id exists in groupedImages
-            groupedImages[room_id] ? groupedImages[room_id].push( { id, blobUrl } ) : groupedImages[room_id] = [{ id, blobUrl }];
+            // Use a conditional operator to check if the uni_id exists in groupedImages if  not create one
+            groupedImages[uni_id] ? groupedImages[uni_id].push( blobUrl ) : groupedImages[uni_id] = [blobUrl];
 
         }
-        state.roomsImageData = JSON.parse( JSON.stringify( groupedImages ) )
+        state.unisImageData = groupedImages
 
 
     },
     setRoomSearchData( state, input )
     {
         let filterData = JSON.parse( JSON.stringify( state.roomsData ) )
+        // if ( input.length || typeof )
         if ( ( input === 'string' || input !== '' ) && filterData )
         {
             let filteredDorms = filterData.filter( ( data ) =>
@@ -73,75 +76,41 @@ const mutations = {
             state.roomsData = filteredDorms;
         } else if ( input === '' )
         {
-            state.roomsData = Cookies.get( "rooms_data_by_id" )
+            state.roomsData = Cookies.get( "rooms_data" )
         }
     },
+
+    setError( state, error )
+    {
+        state.error = error;
+    }
 };
 // Getters object
 const getters = {
-    get_roomsData: ( state ) => state.roomsData,
-    get_roomIsLoading: ( state ) => state.isLoadingRooms,
-    get_roomsInfoError: ( state ) => state.error,
-    get_roomsDeleteIsLoading: ( state ) => state.isLoadingDormitories,
-    get_roomsDeleteInfoError: ( state ) => state.error,
-    get_roomsImageData: ( state ) => state.roomsImageData,
-    get_isLodingImages: ( state ) => state.isLoadingRoomsImages,
-    get_roomsImageError: ( state ) => state.error,
+    get_allUnisData: ( state ) => state.universitiesData,
+    get_uniImageData: ( state ) => state.unisImageData,
 };
 // Actions object
 const actions = {
-    async getDormRooms( { commit }, dorm_id )
+    async getAllUniversities( { commit }, )
     {
         commit( 'setLoading', true );
         try
         {
             const response = await axios.get( url, {
-                params: {
-                    dormitory_id: dorm_id,
-                },
-            } );
-            commit( 'setLoading', false );
-            Cookies.set( `rooms_data_by_id`, response[`data`] )
-            commit( 'setRoomInfoData', response[`data`] );
 
+            } );
+            let responseData = response[`data`]
+            commit( 'setLoading', false );
+            commit( 'setAllUniData', responseData );
+            responseData = JSON.parse( JSON.stringify( responseData ) )
+            Cookies.set( `unis_data`, responseData )
             return response.data; // Return the response data to the component
         } catch ( error )
         {
             // Show error toast message
             commit( 'setLoading', false );
             commit( 'setError', 'Failed to fetch data. Please try again later.' );
-            // Show success toast message
-            Vue.$toast.error( "Something Went Wrong, Please Try Again Later!", {
-                timeout: 2000,
-            } );
-            // throw error; // Throw the error to be caught by the component
-        }
-    },
-    //   Action for  Deleting  Dormitories
-    async deleteRooms( { commit }, id )
-    {
-        commit( 'setLoading', true );
-        try
-        {
-            const response = await axios.delete( urlDelete, {
-                data: {
-                    id: id,
-                },
-            } );
-            commit( 'setLoading', false );
-
-            commit( 'setdeleteRoom', id );
-            Vue.$toast.success( `Successfuly deleted room with the id ${ id }`, {
-                timeout: 2000,
-            } );
-
-            return response.data; // Return the response data to the component
-
-        } catch ( error )
-        {
-            // Show error toast message
-            commit( 'setLoading', false );
-            commit( 'setError', 'Failed to delete data. Please try again later.' );
             // Show success toast message
             Vue.$toast.error( "Something Went Wrong, Please Try Again Later!", {
                 timeout: 2000,
@@ -150,15 +119,17 @@ const actions = {
         }
     },
     //   Action for getting Dormitories Images
-    async getRoomsImage( { commit }, )
+    async getUnisImage( { commit }, )
     {
         commit( 'setLoading', true );
         try
         {
             const response = await axios.get( urlImg, {
             } );
+
+            let responseData = JSON.parse( JSON.stringify( response[`data`][`images`] ) )
             commit( 'setLoading', false );
-            commit( 'setRoomImageoData', response['data'][`images`] );
+            commit( 'setUniImageoData', responseData );
             return response.data; // Return the response data to the component
         } catch ( error )
         {
@@ -169,10 +140,10 @@ const actions = {
             // throw error; // Throw the error to be caught by the component
         }
     },
-    searchByInput( { commit }, input, )
+    searchRoomByInput( { commit }, input, )
     {
         if ( !input || input !== undefined )
-            commit( 'setSearchData', input );
+            commit( 'setRoomSearchData', input );
     },
 
 };

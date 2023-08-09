@@ -82,8 +82,9 @@ export default {
           Cookies.remove("responsedormitoryData");
           Cookies.remove("responseUniData");
           Cookies.remove("responseData");
+          Cookies.remove("rooms_data");
+          Cookies.remove("rooms_data_by_id");
           this.$root.$emit("loggedOut");
-
           this.$router.push(`/`);
         } catch (error) {
           error;

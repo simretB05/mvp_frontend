@@ -1,14 +1,14 @@
 <template>
   <v-row>
-    <v-col cols="12" sm="12" align-start>
+    <v-col class="col" cols="12" sm="12" lg="7" align-center justify-center>
       <div class="text-center">
-        <div class="my-4">
+        <div class="custom-my">
           <v-btn
             small
             color="#061e36"
             dark
-            @click="checkDormRooms"
-            class="hide-on-xs-only"
+            @click="checkDormRooms(dorm_id)"
+            class="hide-on-xs-only mx-3"
           >
             <v-icon color="#f4511e">mdi-bed-empty</v-icon> Dorm Room Listing
           </v-btn>
@@ -29,10 +29,10 @@ export default {
   mounted() {},
   computed: {},
   methods: {
-    checkDormRooms() {
-      if (this.dorm_id) {
-        Cookies.set("dorm_id", this.dorm_id);
-        this.$root.$emit("dorm_id", this.dorm_id);
+    checkDormRooms(dorm_id) {
+      if (dorm_id) {
+        Cookies.set("dorm_id", dorm_id);
+        this.$root.$emit("dorm_id", dorm_id);
         this.$router.push(`/rooms`);
       }
     },
@@ -41,4 +41,13 @@ export default {
 </script>
 
 <style scoped>
+.col {
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.custom-my {
+  padding: 0;
+  margin: 0 auto;
+  width: 100%;
+}
 </style>

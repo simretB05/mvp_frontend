@@ -15,7 +15,7 @@ let urlUpdate = process.env.VUE_APP_BASE_URL + '/api/update-room';
 const state = {
     error: null,
     isLoadingRooms: false,
-    roomsData: undefined,
+    roomsData: [],
     filteredData: undefined,
     token: Cookies.get( "token" ) || "",
 
@@ -32,26 +32,12 @@ const mutations = {
     },
     setdeleteData( state, id )
     {
-        if ( state.roomsData !== [] )
+        if ( !state.roomsData.length === 0 )
         {
             state.roomsData = state.roomsData.filter( data => data.id != id )
         }
     },
-    setSearchData( state, input )
-    {
-        state.filteredDorms_copy = state.dormitoriesData;
-        if ( input !== "" )
-        {
-            let filteredDorms = state.roomData.filter( ( data ) =>
-                data.name.includes( input )
-            );
-            state.dormitoriesData = filteredDorms;
-        } else if ( input === '' )
-        {
-            state.dormitoriesData = Cookies.get( "roomsData" )
-        }
 
-    },
 
     setError( state, error )
     {
@@ -116,7 +102,7 @@ const actions = {
             commit( 'setLoading', false );
             commit( 'setUpdate', response[`data`] );
 
-            Vue.$toast.success( "Dormitory Updated ", {
+            Vue.$toast.success( "Rooms Updated ", {
                 timeout: 2000,
             } );
             return response.data; // Return the response data to the component

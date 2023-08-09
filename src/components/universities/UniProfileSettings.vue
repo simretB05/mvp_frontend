@@ -1,12 +1,18 @@
 <template>
   <v-container class="custom-size">
     <v-row>
-      <v-col cols="12" sm="8" md="6" lg="5">
+      <v-col cols="12" sm="8" md="6" lg="2">
         <h2 class="green--text-center font-weight-bold mb-4">
           <v-icon color="#f4511e" class="mr-2">mdi-cog</v-icon>
           Settings Page
         </h2>
         <p class="text-center">Customize your account settings here</p>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12" sm="6" md="4" lg="2">
+        <!-- Card Image -->
+        <v-img :src="src" height="200px" width="100%" contain></v-img>
       </v-col>
     </v-row>
     <v-card class="mx-auto" max-width="100%">
@@ -92,26 +98,23 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-      <!-- <v-card-actions>
-        <v-slide-x-reverse-transition>
-          <v-tooltip left>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                icon
-                class="my-0"
-                v-bind="attrs"
-                @click="resetForm"
-                v-on="on"
-                color="#f4511e"
-              >
-                <v-icon>mdi-refresh</v-icon>
-              </v-btn>
-            </template>
-            <span>Refresh form</span>
-          </v-tooltip>
-        </v-slide-x-reverse-transition>
-        <v-btn color="#f4511e" text @click="submit"> edite</v-btn>
-      </v-card-actions> -->
+      <v-card-actions>
+        <v-row justify="center" class="my-2">
+          <!-- Edit Icon -->
+          <v-btn
+            icon
+            @click="updateDorm(dormitory.id)"
+            color="#f67850"
+            class="mx-4"
+          >
+            <v-icon color="#f67850">mdi-pencil</v-icon> Edite
+          </v-btn>
+          <!-- Delete Icon -->
+          <v-btn icon @click="deleteDormitories(dormitory.id)">
+            <v-icon color="#f67850">mdi-delete</v-icon>
+          </v-btn>
+        </v-row>
+      </v-card-actions>
     </v-card>
   </v-container>
 </template>
@@ -127,23 +130,7 @@ export default {
       universityInfo: undefined,
       universityData: [],
       blobd: undefined,
-      cards: [
-        {
-          title: "University Home image",
-          src: "",
-          flex: 12,
-        },
-        {
-          title: "Dormetories image",
-          src: "",
-          flex: 6,
-        },
-        {
-          title: "Best  Dorm rooms image",
-          src: undefined,
-          flex: 6,
-        },
-      ],
+      src: undefined,
     };
   },
   computed: {
@@ -164,11 +151,9 @@ export default {
         .then((response) => {
           let infoList = response[`data`];
           let src = URL.createObjectURL(response[`data`]);
-          console.log(src);
-          for (let i = 0; i < this.cards.length; i++) {
-            this.cards[i].src = src;
-          }
-          this.$store.commit("setUniversityInfo", infoList);
+          this.src = src;
+
+          this.$store.commit("setUniInfoData", infoList);
           this.$root.$emit(`uniData`, this.universityInfo);
         })
         .catch((error) => {

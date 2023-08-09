@@ -80,7 +80,6 @@ export default {
   methods: {
     listenToEvent() {
       this.id = Cookies.get("university_id");
-      console.log(this.id);
       if (this.id !== this.id) {
         this.$toast.success("Successfully Logged  out", {
           timeout: 2000,

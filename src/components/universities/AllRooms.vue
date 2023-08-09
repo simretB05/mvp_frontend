@@ -1,13 +1,7 @@
 <template>
-  <v-container fluid class="custom-width">
+  <v-container class="custom-width">
     <v-row align="center">
-      <v-col
-        cols="12"
-        sm="12"
-        lg="8"
-        justify-content="start"
-        align-items="start"
-      >
+      <v-col cols="12" sm="12" md="6" lg="5">
         <h2 class="green--text-center font-weight-bold mb-4">
           <v-icon color="#f4511e" class="mr-2">mdi-monitor</v-icon>
           Rooms Display Page
@@ -15,24 +9,10 @@
         <p class="text-center">Browse All Dormitory Rooms Here</p>
       </v-col>
     </v-row>
-    <v-card>
-      <v-card-title></v-card-title>
-      <!-- Checkbox for product selection -->
-      <v-card-text>
-        <v-checkbox label="Select By Type" hide-details></v-checkbox>
-        <v-checkbox label="Select By Monthly-Rent" hide-details></v-checkbox>
-        <v-checkbox
-          color=""
-          label="Select By Capacity"
-          hide-details
-        ></v-checkbox>
-        <v-checkbox label="Select By Building floor " hide-details></v-checkbox>
-      </v-card-text>
-    </v-card>
     <v-col
       class="text-subtitle-1 deep-orange--text text--darken-3 font-weight-bold text-center"
       cols="12"
-      v-if="get_allRoomIsLoading && !get_allRoomsData > [0]"
+      v-if="get_allRoomIsLoading || !get_allRoomsData === 0"
     >
       Getting Your Rooms
       <v-col cols="12">
@@ -46,7 +26,7 @@
           <v-col
             class="text-subtitle-1 deep-orange--text text--darken-3 font-weight-bold text-center"
             cols="12"
-            v-if="!get_allRoomIsLoading && !get_allRoomsData > [0]"
+            v-if="!get_allRoomIsLoading && get_allRoomsData === 0"
           >
             No Rooms Currently, Please Try Again
           </v-col>
@@ -54,83 +34,84 @@
       </v-flex>
     </v-layout>
     <v-row align="center">
-      <v-col class="search" cols="12" sm="12" md="6" lg="2">
+      <v-col class="search" cols="12" sm="12" md="6" lg="3">
         <v-text-field
           v-model="search_input"
           ref="search_input"
-          label="Search Dormitories"
+          label="Search Room"
           placeholder="Enter dorm name"
           prepend-inner-icon="mdi-magnify"
-          @input="searchByInput(search_input)"
+          @input="searchRoomByInput(search_input)"
         ></v-text-field>
       </v-col>
     </v-row>
-
-    <v-row justify="center" align="center" class="max-width">
-      <div></div>
-      <v-col
-        cols="12"
-        sm="12"
-        md="6"
-        lg="3"
-        class="ma-0"
-        v-for="(room, i) in get_allRoomsData"
-        :key="i"
-      >
-        <v-card>
-          <v-carousel cycle color="orange">
-            <v-carousel-item
-              v-for="(image, index) in getRoomImagesByRoomId(room.id)"
-              :key="index"
-            >
-              <v-img
-                :src="image.blobUrl"
-                height="450"
-                class="white--text align-end"
-                gradient="to bottom, rgba(255, 165, 0, 0.1), rgba(255, 140, 0, 0.3)"
-              >
-                <v-card-title
-                  class="white--text text--darken-1 font-weight-bold"
+    <div class="row-container">
+      <v-row>
+        <v-col
+          cols="12"
+          sm="6"
+          md="4"
+          lg="3"
+          v-for="(room, i) in get_allRoomsData"
+          :key="i"
+        >
+          <v-card class="ma-2">
+            <div>
+              <v-carousel hide-delimiter-background height="100%">
+                <v-carousel-item
+                  v-for="(image, index) in getRoomImagesByRoomId(room.id)"
+                  :key="index"
                 >
-                  {{ image.title }}
-                </v-card-title>
-              </v-img>
-            </v-carousel-item>
-          </v-carousel>
-          <v-card-text>
-            <div class="black--text text--darken-1 font-weight-normal">
-              Room Name: {{ room.room_number }}
+                  <v-img
+                    :src="image.blobUrl"
+                    height="100%"
+                    class="white--text align-end"
+                    gradient="to bottom, rgba(255, 165, 0, 0.1), rgba(255, 140, 0, 0.3)"
+                  >
+                    <v-card-title
+                      class="white--text text--darken-1 font-weight-bold"
+                    >
+                      {{ image.title }}
+                    </v-card-title>
+                  </v-img>
+                </v-carousel-item>
+              </v-carousel>
+              <v-card-text>
+                <div class="black--text text--darken-1 font-weight-normal">
+                  Room Number: {{ room.room_number }}
+                </div>
+                <div class="black--text text--darken-1 font-weight-normal">
+                  Type :
+                  {{ room.room_type }}
+                </div>
+                <div class="black--text text--light-1 font-weight-normal">
+                  Building-Floor: {{ room.floor_name }}
+                </div>
+                <div class="black--text text--light-1 font-weight-normal">
+                  Capacity: {{ room.capacity }}
+                </div>
+                <div class="black--text text--light-1 font-weight-normal">
+                  Monthly-Rent: {{ room.monthly_rent }}
+                </div>
+                <div class="black--text text--light-1 font-weight-normal"></div>
+                <div class="deep-orange--text text--light-4 font-weight-bold">
+                  Facilities:
+                </div>
+                <v-chip-group>
+                  <v-chip
+                    v-for="(facility, i) in parseFacilities(room.facilities)"
+                    :key="i"
+                    label
+                    class="deep-orange--text text--darken-1 font-weight-bold"
+                    >{{ facility }}</v-chip
+                  >
+                </v-chip-group>
+              </v-card-text>
             </div>
-            <div class="black--text text--darken-1 font-weight-normal">
-              Type :
-              {{ room.room_type }}
-            </div>
-            <div class="black--text text--light-1 font-weight-normal">
-              Building-Floor: {{ room.floor_name }}
-            </div>
-            <div class="black--text text--light-1 font-weight-normal">
-              Capacity: {{ room.capacity }}
-            </div>
-            <div class="black--text text--light-1 font-weight-normal">
-              Monthly-Rent: {{ room.monthly_rent }}
-            </div>
-            <div class="black--text text--light-1 font-weight-normal"></div>
-            <div class="deep-orange--text text--light-4 font-weight-bold">
-              Facilities:
-            </div>
-            <v-chip-group>
-              <v-chip
-                v-for="(facility, i) in parseFacilities(room.facilities)"
-                :key="i"
-                label
-                class="deep-orange--text text--darken-1 font-weight-bold"
-                >{{ facility }}</v-chip
-              >
-            </v-chip-group>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+          </v-card>
+        </v-col>
+      </v-row>
+    </div>
   </v-container>
 </template>
     <script>
@@ -163,7 +144,12 @@ export default {
     ]),
   },
   methods: {
-    ...mapActions(["getAllDormRooms", "getRoomsImage", "deleteRooms"]),
+    ...mapActions([
+      "getAllDormRooms",
+      "getRoomsImage",
+      "deleteRooms",
+      "searchRoomByInput",
+    ]),
     // A function to parse a JSON-formatted string representing a list of facilities and return it as an array.
     // If there's an error while parsing, it will return an empty array.
     parseFacilities(facilitiesString) {
@@ -176,7 +162,7 @@ export default {
       }
     },
     getRoomImagesByRoomId(roomId) {
-      if (this.get_allRoomsData && roomId) {
+      if (this.get_roomsImageData && roomId) {
         return this.get_roomsImageData[roomId];
       }
     },
@@ -186,7 +172,7 @@ export default {
           let imageListResp = await this.getRoomsImage();
           imageListResp;
         } catch (error) {
-          console.log(error);
+          error;
         }
       }
     },
@@ -195,6 +181,7 @@ export default {
         try {
           let responsedata = await this.getAllDormRooms();
           responsedata;
+
           this.editDialog === false;
         } catch (error) {
           error;
@@ -241,10 +228,7 @@ export default {
   display: flex;
   justify-content: flex-start;
 }
-.custom-width {
-  width: 70%;
-  margin: 0 auto;
-}
+
 @media only screen and (min-width: 600px) {
   .custom-width {
     width: 100%;
@@ -252,7 +236,7 @@ export default {
   }
 }
 .custom-width {
-  width: 80%;
+  width: 100%;
   margin: 0 auto;
 }
 v-btn--icon {

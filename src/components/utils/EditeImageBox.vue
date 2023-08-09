@@ -120,7 +120,7 @@ export default {
       if (this.$refs.file && this.formHasErrors === true) {
         this.$refs.file.validate(true);
       } else {
-        this.$root.$emit("image_update", this.form);
+        this.$root.$emit("dorm_image_update", this.form);
         this.$toast.success("Successfully saved image", {
           timeout: 2000,
         });

@@ -7,14 +7,12 @@ import Toast from "vue-toastification";
 // Initialize Vue instance and use Vue Toastification plugin
 Vue.use( Toast );
 let url = process.env.VUE_APP_BASE_URL + '/api/get-all-rooms';
-let urlDelete = process.env.VUE_APP_BASE_URL + '/api/dorm-room';
 let urlImg = process.env.VUE_APP_BASE_URL + '/api/room-image';
 // State object
 const state = {
     error: null,
     isLoadingRooms: false,
-    roomsData: undefined,
-    filteredData: undefined,
+    roomsData: [],
     isLoadingRoomsImages: false,
     roomsImageData: undefined,
 };
@@ -57,30 +55,28 @@ const mutations = {
             let byteArray = new Uint8Array( byteNumbers );
             let blob = new Blob( [byteArray], { type: contentType } );
             let blobUrl = URL.createObjectURL( blob );
-
             // Use a conditional operator to check if the room_id exists in groupedImages
             groupedImages[room_id] ? groupedImages[room_id].push( blobUrl ) : groupedImages[room_id] = [blobUrl];
 
-            state.roomsImageData = groupedImages
-            // Cookies.set( "newImageDataFromCookies", groupedImages )
-            // state.roomsImageData[0] ? state.roomsImageData = Cookies.get( "newImageDataFromCookies" ) : state.roomsImageData = groupedImages
         }
+        state.roomsImageData = groupedImages
     },
-    setSearchData( state, input )
+    setRoomSearchData( state, input )
     {
-        state.filteredDorms_copy = state.dormitoriesData;
-        if ( input.length || typeof input === 'string' || input.trim() !== '' )
+        let filterData = JSON.parse( JSON.stringify( state.roomsData ) )
+        // if ( input.length || typeof )
+        if ( ( input === 'string' || input !== '' ) && filterData )
         {
-            let filteredRooms = state.roomData.filter( ( data ) =>
-                data.name.includes( input )
+            let filteredDorms = filterData.filter( ( data ) =>
+                data.room_number.includes( input )
             );
-            state.dormitoriesData = filteredRooms;
+            state.roomsData = filteredDorms;
         } else if ( input === '' )
         {
-            state.roomData = Cookies.get( "roomsData" )
+            state.roomsData = Cookies.get( "rooms_data" )
         }
-
     },
+
     setError( state, error )
     {
         state.error = error;
@@ -108,11 +104,12 @@ const actions = {
             const response = await axios.get( url, {
 
             } );
+            let responseData = response[`data`]
             commit( 'setLoading', false );
-            commit( 'setAllRoomInfoData', response[`data`] );
-            Vue.$toast.success( "Your  Rooms Are Ready ", {
-                timeout: 2000,
-            } );
+            commit( 'setAllRoomInfoData', responseData );
+            responseData = JSON.parse( JSON.stringify( responseData ) )
+            Cookies.set( `rooms_data`, responseData )
+
             return response.data; // Return the response data to the component
         } catch ( error )
         {
@@ -126,36 +123,7 @@ const actions = {
             // throw error; // Throw the error to be caught by the component
         }
     },
-    //   Action for  Deleting  Dormitories
-    async deleteRooms( { commit }, id )
-    {
-        commit( 'setLoading', true );
-        try
-        {
-            const response = await axios.delete( urlDelete, {
-                data: {
-                    id: id,
-                },
-            } );
-            commit( 'setdeleteRoom', id );
-            Vue.$toast.success( `Successfuly deleted dormitory with the id ${ id }`, {
-                timeout: 2000,
-            } );
 
-            return response.data; // Return the response data to the component
-
-        } catch ( error )
-        {
-            // Show error toast message
-            commit( 'setLoading', false );
-            commit( 'setError', 'Failed to delete data. Please try again later.' );
-            // Show success toast message
-            Vue.$toast.error( "Something Went Wrong, Please Try Again Later!", {
-                timeout: 2000,
-            } );
-            // throw error; // Throw the error to be caught by the component
-        }
-    },
     //   Action for getting Dormitories Images
     async getRoomsImage( { commit }, )
     {
@@ -166,10 +134,6 @@ const actions = {
             } );
             commit( 'setLoading', false );
             commit( 'setRoomImageoData', response['data'][`images`] );
-
-            Vue.$toast.success( "Rooms images are ready ", {
-                timeout: 2000,
-            } );
             return response.data; // Return the response data to the component
 
         } catch ( error )
@@ -178,16 +142,13 @@ const actions = {
             commit( 'setLoading', false );
             commit( 'setError', 'Failed to fetch data. Please try again later.' );
             // Show success toast message
-            Vue.$toast.error( "Something Went Wrong, Please Try Again Later!", {
-                timeout: 2000,
-            } );
             // throw error; // Throw the error to be caught by the component
         }
     },
-    searchByInput( { commit }, input, )
+    searchRoomByInput( { commit }, input, )
     {
         if ( !input || input !== undefined )
-            commit( 'setSearchData', input );
+            commit( 'setRoomSearchData', input );
     },
 
 };

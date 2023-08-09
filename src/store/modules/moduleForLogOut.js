@@ -54,7 +54,9 @@ const actions = {
                 },
             } );
             commit( 'setLoading', false );
-
+            Vue.$toast.success( "You Are Looged out ", {
+                timeout: 2000,
+            } );
 
             return response.data; // Return the response data to the component
 
@@ -64,7 +66,7 @@ const actions = {
             commit( 'setLoading', false );
             commit( 'setError', 'Failed to fetch data. Please try again later.' );
             // Show success toast message
-            Vue.$toast.error( "Alrady Logged In", {
+            Vue.$toast.error( "Please Try Again", {
                 timeout: 2000,
             } );
             // throw error; // Throw the error to be caught by the component

@@ -14,11 +14,8 @@ let urlImg = process.env.VUE_APP_BASE_URL + '/api/dorm-image';
 const state = {
     error: null,
     isLoadingDormitories: false,
-    dormitoriesData: undefined,
-    isLoadingForDorm: false,
-    filteredData: undefined,
+    dormitoriesData: [],
     dormImageData: undefined,
-    filteredDorms_copy: []
 };
 // Mutations object
 const mutations = {
@@ -32,7 +29,7 @@ const mutations = {
     },
     setdeleteData( state, id )
     {
-        if ( state.dormitoriesData !== [] )
+        if ( state.dormitoriesData.length === 0 )
         {
             state.dormitoriesData = state.dormitoriesData.filter( data => data.id != id )
 
@@ -73,15 +70,13 @@ const mutations = {
             // state.roomsImageData[0] ? state.roomsImageData = Cookies.get( "newImageDataFromCookies" ) : state.roomsImageData = groupedImages
         }
         state.dormImageData = JSON.parse( JSON.stringify( groupedImages ) )
-
-
     },
     setSearchData( state, input )
     {
-        state.filteredDorms_copy = state.dormitoriesData;
-        if ( input.length || typeof input === 'string' || input.trim() !== '' )
+        let filterData = JSON.parse( JSON.stringify( state.dormitoriesData ) )
+        if ( ( input === 'string' || input.trim() !== '' ) && filterData )
         {
-            let filteredDorms = state.dormitoriesData.filter( ( data ) =>
+            let filteredDorms = filterData.filter( ( data ) =>
                 data.name.includes( input )
             );
             state.dormitoriesData = filteredDorms;
@@ -89,9 +84,7 @@ const mutations = {
         {
             state.dormitoriesData = Cookies.get( "responsedormitoryData" )
         }
-
     },
-
     setError( state, error )
     {
         state.error = error;
@@ -103,7 +96,6 @@ const getters = {
     get_dormIsLoading: ( state ) => state.isLoadingDormitories,
     get_dormInfoError: ( state ) => state.error,
     get_dormDeleteIsLoading: ( state ) => state.isLoadingDormitories,
-    get_dormDeleteInfoError: ( state ) => state.error,
     get_filterdData: ( state ) => state.filteredData,
     get_dormImageData: ( state ) => state.dormImageData
 };
@@ -121,20 +113,12 @@ const actions = {
             } );
             commit( 'setLoading', false );
             commit( 'setUniInfoData', response[`data`] );
-            Vue.$toast.success( "Your  Dormitories Are Ready ", {
-                timeout: 2000,
-            } );
             return response.data; // Return the response data to the component
         } catch ( error )
         {
-            // Show error toast message
             commit( 'setLoading', false );
             commit( 'setError', 'Failed to fetch data. Please try again later.' );
-            // Show success toast message
-            Vue.$toast.error( "Something Went Wrong, Please Try Again Later!", {
-                timeout: 2000,
-            } );
-            // throw error; // Throw the error to be caught by the component
+
         }
     },
     //   Action for  Deleting  Dormitories
@@ -148,10 +132,14 @@ const actions = {
                     id: id,
                 },
             } );
-            commit( 'setdeleteData', id );
-            Vue.$toast.success( `Successfuly deleted dormitory with the id ${ id }`, {
+            if ( response[`data`] )
+                commit( 'setLoading', false );
+
+            Vue.$toast.success( `Successfuly deleted  dormitory with the id ${ id }`, {
                 timeout: 2000,
             } );
+            commit( 'setdeleteData', id );
+
 
             return response.data; // Return the response data to the component
 
@@ -160,10 +148,9 @@ const actions = {
             // Show error toast message
             commit( 'setLoading', false );
             commit( 'setError', 'Failed to delete data. Please try again later.' );
-            // Show success toast message
-            Vue.$toast.error( "Something Went Wrong, Please Try Again Later!", {
-                timeout: 2000,
-            } );
+            // Vue.$toast.error( "Something Went Wrong, Please Try Again Later!", {
+            //     timeout: 2000,
+            // } );
             // throw error; // Throw the error to be caught by the component
         }
     },
@@ -177,12 +164,7 @@ const actions = {
             } );
             commit( 'setLoading', false );
             commit( 'setDormImageoData', response['data'][`images`] );
-
-            Vue.$toast.success( "Rooms images are ready ", {
-                timeout: 2000,
-            } );
             return response.data; // Return the response data to the component
-
         } catch ( error )
         {
             // Show error toast message

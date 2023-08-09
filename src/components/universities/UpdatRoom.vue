@@ -248,12 +248,13 @@ export default {
     },
     async submitUpdate() {
       this.formHasErrors = false;
-      console.log(this.form);
       if (this.room_id) {
         try {
           let responsedata = await this.updatingRoom(this.form);
           responsedata;
-          this.$root.$emit("close");
+          if (responsedata) {
+            this.$root.$emit("close");
+          }
         } catch (error) {
           error;
         }

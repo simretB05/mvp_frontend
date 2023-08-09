@@ -56,9 +56,7 @@ const actions = {
             commit( 'setLoading', false );
             commit( 'setUniInfoData', response[`data`] );
 
-            Vue.$toast.success( "Your Profile is Ready", {
-                timeout: 2000,
-            } );
+
             return response.data; // Return the response data to the component
 
         } catch ( error )

@@ -106,7 +106,7 @@
                           margin: 0;
                         "
                       >
-                        <v-img :src="image.blobUrl" />
+                        <v-img :src="image.blobUrl" alt="dormitory image" />
                       </v-list-item-avatar>
                     </v-btn>
                   </v-list-item>
@@ -120,7 +120,7 @@
                       </v-btn>
                     </v-card-title>
                     <v-card-text>
-                      <edite-image-box :imageId="imageId"></edite-image-box>
+                      <edite-image-box :imageId="image_id"></edite-image-box>
                     </v-card-text>
                   </v-card>
                 </v-dialog>
@@ -148,7 +148,9 @@
               <span>Refresh form</span>
             </v-tooltip>
           </v-slide-x-reverse-transition>
-          <v-btn color="#f4511e" text @click="submitUpdate"> Submit </v-btn>
+          <v-btn color="#f4511e" text @click="submitUpdate">
+            Save Changes</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-col>
@@ -191,7 +193,7 @@ export default {
       zip: null,
       file: undefined,
       token: Cookies.get("token"),
-      imageId: undefined,
+      image_id: undefined,
     };
   },
   computed: {
@@ -209,7 +211,7 @@ export default {
             ? JSON.stringify(this.facilities)
             : null,
         file: this.file ? this.file : null,
-        image_id: this.imageId ? this.imageId : null,
+        image_id: this.image_id ? this.image_id : null,
       };
     },
     ...mapGetters(["getUniInfoData", "get_dormImageData"]),
@@ -239,13 +241,12 @@ export default {
     },
     async submitUpdate() {
       this.formHasErrors = false;
-      console.log(this.form);
       if (this.form.state === null || this.form.country === null) {
         this.formHasErrors = true;
         this.$refs.state.validate(true);
         this.$refs.country.validate(true);
       }
-      if (this.dorm_id && this.formHasErrors === false) {
+      if (this.formHasErrors === false) {
         try {
           let responsedata = await this.updatingDormitory(this.form);
           responsedata;
@@ -257,17 +258,17 @@ export default {
     },
     editeImage(imageId) {
       this.editeImageDialog = !this.editeImageDialog;
-      this.imageId = imageId;
+      this.image_id = imageId;
     },
 
     updateImage(image) {
-      this.form.file = image.file;
+      this.file = image.file;
       this.editeImageDialog = !this.editeImageDialog;
     },
   },
   mounted() {
     this.getDormImagesByDormId();
-    this.$root.$on("image_update", this.updateImage);
+    this.$root.$on("dorm_image_update", this.updateImage);
   },
 };
 </script>
