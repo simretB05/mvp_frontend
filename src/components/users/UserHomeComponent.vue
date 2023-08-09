@@ -66,27 +66,7 @@ export default {
   },
   methods: {
     ...mapActions(["getAllUniversities", "getUnisImage"]),
-    createCombinedGroups() {
-      let uniData = this.get_allUnisData;
-      let imageData = this.get_uniImageData["1"];
-      let groupSize = 3; // Number of universities and images per group
-      let combinedGroups = [];
 
-      for (let i = 0; i < uniData.length; i += groupSize) {
-        let group = [];
-        for (let j = i; j < i + groupSize; j++) {
-          if (j < uniData.length) {
-            group.push({
-              university: uniData[j],
-              image: imageData[j % imageData.length],
-            });
-          }
-        }
-        combinedGroups.push(group);
-      }
-
-      this.combinedGroups = combinedGroups;
-    },
     // getRoomImagesByRoomId(roomId) {
     //   if (roomId !== undefined && this.get_roomsImageData) {
     //     return this.get_roomsImageData[roomId];
@@ -110,12 +90,36 @@ export default {
         error;
       }
     },
+    createCombinedGroups() {
+      let uniData = this.get_allUnisData;
+      let imageData = this.get_uniImageData["1"];
+      let groupSize = 3; // Number of universities and images per group
+      let combinedGroups = [];
+
+      for (let i = 0; i < uniData.length; i += groupSize) {
+        let group = [];
+        for (let j = i; j < i + groupSize; j++) {
+          if (j < uniData.length) {
+            group.push({
+              university: uniData[j],
+              image: imageData[j % imageData.length],
+            });
+          }
+        }
+        combinedGroups.push(group);
+      }
+
+      this.combinedGroups = combinedGroups;
+    },
+    async fetchData() {
+      await this.getUnisImageData();
+      await this.getUnis();
+      this.createCombinedGroups();
+    },
   },
 
   mounted() {
-    this.getUnis();
-    this.getUnisImageData();
-    this.createCombinedGroups();
+    this.fetchData();
   },
 };
 </script>
