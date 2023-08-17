@@ -1,36 +1,52 @@
 <template>
   <v-container>
-    <v-carousel
-      cycle
-      style="width: 70%; margin: 0 auto"
-      hide-delimiter-background
-      horizontal
-    >
-      <v-carousel-item v-for="(group, j) in combinedGroups" :key="j">
-        <v-row class="no-wrap" width="100%">
-          <v-col v-for="(item, i) in group" :key="i">
-            <button style="border: none; background: none; width: 100%">
-              <v-card
-                width="100%"
-                style="border-radius: 25px"
-                class="d-flex flex-column"
+    <v-row style="width: 70%; margin: 0 auto">
+      <v-col cols="12" style="width: 100%; margin: 0 auto">
+        <v-carousel
+          cycle
+          style="width: 100%; margin: 0 auto"
+          hide-delimiter-background
+          horizontal
+        >
+          <v-carousel-item v-for="(group, j) in combinedGroups" :key="j">
+            <v-row class="no-wrap" width="100%">
+              <v-col
+                cols="12"
+                sm="12"
+                lg="4"
+                v-for="(item, i) in group"
+                :key="i"
               >
-                <v-img
-                  :src="item.image"
-                  aspect-ratio="1"
-                  class="grey lighten-2"
-                ></v-img>
-                <v-card-text>
-                  <div class="black--text text--darken-1 font-weight-normal">
-                    Student accommodation in {{ item[`university`][`city`] }}
-                  </div>
-                </v-card-text>
-              </v-card>
-            </button>
-          </v-col>
-        </v-row>
-      </v-carousel-item>
-    </v-carousel>
+                <button
+                  style="border: none; background: none; width: 100%"
+                  @click="routeToListings(item.university.id)"
+                >
+                  <v-card
+                    width="100%"
+                    style="border-radius: 25px"
+                    class="d-flex flex-column"
+                  >
+                    <v-img
+                      :src="item.image"
+                      aspect-ratio="1"
+                      class="grey lighten-2"
+                    ></v-img>
+                    <v-card-text>
+                      <div
+                        class="black--text text--darken-1 font-weight-normal"
+                      >
+                        Student accommodation in
+                        {{ item[`university`][`city`] }}
+                      </div>
+                    </v-card-text>
+                  </v-card>
+                </button>
+              </v-col>
+            </v-row>
+          </v-carousel-item>
+        </v-carousel>
+      </v-col>
+    </v-row>
     <v-card width="70%" style="margin: 0 auto">
       <v-card-title>Landlords and property managers </v-card-title>
       <v-card-text>
@@ -38,6 +54,7 @@
       </v-card-text>
       <v-card-actions>
         <v-btn
+          @click="routeToRegister"
           color="#f4511e"
           width="200px"
           class="white--text text--darken-1 font-weight-normal"
@@ -47,11 +64,9 @@
     </v-card>
   </v-container>
 </template>
-
-
 <script>
-// import carouselNva from "@/components/utils/carouselNva.vue";
 import { mapActions, mapGetters } from "vuex";
+import Cookies from "vue-cookies";
 
 export default {
   components: {},
@@ -115,6 +130,16 @@ export default {
       await this.getUnisImageData();
       await this.getUnis();
       this.createCombinedGroups();
+    },
+    routeToRegister() {
+      this.$router.push(`/register`);
+    },
+    routeToListings(id) {
+      if (id) {
+        this.$root.$emit("uniIdFromHome", id);
+        Cookies.set(`uniIdFromHome`, id);
+        this.$router.push(`/university-Listing`);
+      }
     },
   },
 

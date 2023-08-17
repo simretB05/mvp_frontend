@@ -24,8 +24,8 @@ const routes = [
     component: UserHomePage
   },
   {
-    path: '/univetsity-Listing',
-    name: 'univetsity-Listing',
+    path: '/university-Listing',
+    name: 'university-Listing',
     component: UniversityListingPage
   },
   {

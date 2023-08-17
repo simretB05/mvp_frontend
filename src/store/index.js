@@ -10,6 +10,7 @@ import moduleForAddingRooms from '@/store/modules/moduleForAddingRooms';
 import moduleForGettingAllRooms from '@/store/modules/moduleForGettingAllRooms';
 import moduleForLogOut from '@/store/modules/moduleForLogOut';
 import moduleForGettingAllUnis from '@/store/modules/moduleForGettingAllUnis';
+import moduleForGettingUniFromHome from './modules/moduleForGettingUniFromHome';
 
 
 
@@ -28,6 +29,7 @@ export default new Vuex.Store( {
     moduleForAddingRooms,
     moduleForGettingAllRooms,
     moduleForLogOut,
-    moduleForGettingAllUnis
+    moduleForGettingAllUnis,
+    moduleForGettingUniFromHome
   }
 } );

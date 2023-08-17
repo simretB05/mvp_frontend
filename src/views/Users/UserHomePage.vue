@@ -17,6 +17,5 @@ export default {
 <style scoped>
 main {
   min-height: 80vh;
-  margin-bottom: 36px;
 }
 </style>

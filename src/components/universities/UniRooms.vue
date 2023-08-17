@@ -278,7 +278,7 @@ export default {
     this.$root.$on("new_room_added", this.getRoomsImageData);
     this.getRoomsImageData();
     this.getRoomImagesByRoomId();
-    this.getUniroom(this.dorm_id);
+    this.getUniroom();
   },
 };
 </script>

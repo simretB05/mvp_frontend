@@ -94,6 +94,7 @@ const getters = {
 const actions = {
     async getAllUniversities( { commit }, )
     {
+
         commit( 'setLoading', true );
         try
         {

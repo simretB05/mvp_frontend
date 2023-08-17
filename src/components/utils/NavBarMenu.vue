@@ -10,12 +10,23 @@
               @click="drawer = !drawer"
             >
             </v-app-bar-nav-icon>
-            <v-toolbar-title color="#ffffff" class="text-uppercase grey--text">
-              <span class="white--text text--darken-1 font-weight-bold"
-                >Dorm</span
-              >
-              <span class="white--text subtitle-2">Finder</span>
-            </v-toolbar-title>
+            <v-btn
+              @click="routeHome"
+              class="btn-custom"
+              style="
+                background-color: transparent;
+                border: none;
+                box-shadow: none;
+                color: #ffffff;
+              "
+            >
+              <v-toolbar-title class="text-uppercase grey--text">
+                <span class="white--text text--darken-1 font-weight-bold"
+                  >Dorm</span
+                >
+                <span class="white--text subtitle-2">Finder</span>
+              </v-toolbar-title>
+            </v-btn>
             <v-spacer></v-spacer>
             <large-size-notsigned-in-nav
               class="d-none d-lg-block"
@@ -86,6 +97,9 @@ export default {
         });
       }
     },
+    routeHome() {
+      this.$router.push(`/`);
+    },
   },
   mounted() {
     this.$root.$on("universityLoggedIn", this.listenToEvent);
@@ -104,6 +118,12 @@ export default {
 nav {
   display: flex;
   justify-content: flex-start;
+}
+.btn-custom {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  color: "#ffffff";
 }
 .my-5 {
   padding: 16px;

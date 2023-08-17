@@ -253,6 +253,7 @@ export default {
       this.dorm_id = dormitoryId;
     },
   },
+
   mounted() {
     this.$root.$on("new_dorm_added", this.getUniDormitory);
     this.$root.$on("close", this.getUniDormitory);
@@ -264,9 +265,9 @@ export default {
     this.$root.$on("dorm_image_update", this.getDormImagesByDormId);
     this.$root.$on("close", this.getDormImagesByDormId);
 
-    this.getUniDormitory();
     this.getDormsImageData();
     this.getDormImagesByDormId();
+    this.getUniDormitory();
   },
 };
 </script>
