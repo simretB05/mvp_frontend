@@ -140,7 +140,7 @@
       </v-col>
       <!-- Map Column -->
       <v-col cols="12" md="6" style="border: 1px solid orange">
-        <div id="mapContainer" style="height: 400px"></div>
+        <div id="map-container" style="height: 100vh"></div>
       </v-col>
     </v-row>
   </v-container>
@@ -149,6 +149,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import Cookies from "vue-cookies";
+import mapboxgl from "mapbox-gl";
 
 export default {
   data() {
@@ -197,10 +198,49 @@ export default {
         return [];
       }
     },
+    getMap() {
+      mapboxgl.accessToken =
+        "pk.eyJ1Ijoic2ltYjA1IiwiYSI6ImNsbGZ0M3I1NjB1OXczcXBremVrMm5hOHQifQ.7clQHduZ3cW-0tSTtV0hqw";
+      // Example: Center the map on Alberta, Canada (approximate center)
+      const initialCenter = [-114.0677, 53.5461]; // [longitude, latitude]
+      const map = new mapboxgl.Map({
+        container: "map-container",
+        style: "mapbox://styles/mapbox/outdoors-v11", // Example map style URL
+        center: initialCenter,
+        zoom: 10, // starting zoom
+      });
+      this.get_dormDataFromHome.forEach(async (dormitory) => {
+        try {
+          // Use Mapbox Geocoding API to geocode the address
+          const response = await fetch(
+            `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+              dormitory.address
+            )},${encodeURIComponent(dormitory.city)},${encodeURIComponent(
+              dormitory.country
+            )}.json?access_token=pk.eyJ1Ijoic2ltYjA1IiwiYSI6ImNsbGZ0M3I1NjB1OXczcXBremVrMm5hOHQifQ.7clQHduZ3cW-0tSTtV0hqw`
+          );
+
+          const data = await response.json();
+          console.log(data);
+
+          // Extract the latitude and longitude from the geocoding response
+          const [longitude, latitude] = data.features[0].center;
+
+          // Create a marker with the geocoded coordinates
+          new mapboxgl.Marker({ color: "black" })
+            .setLngLat([longitude, latitude])
+            .setPopup(new mapboxgl.Popup().setHTML(`<p>${dormitory.name}</p>`))
+            .addTo(map);
+        } catch (error) {
+          console.error("Error geocoding address:", error);
+        }
+      });
+    },
   },
   mounted() {
     this.getUniFromHome();
     this.getDormsImageData();
+    this.getMap();
   },
 };
 </script>
