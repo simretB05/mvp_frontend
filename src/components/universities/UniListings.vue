@@ -97,8 +97,8 @@
                 </v-carousel-item>
               </v-carousel>
             </div>
-            <div style="height: 226px">
-              <v-card-text>
+            <div style="height: 266px">
+              <v-card-text class="card-info">
                 <div class="black--text text--darken-1 font-weight-normal">
                   Dormitory Name: {{ dormitory.name }}
                 </div>
@@ -116,6 +116,55 @@
                 </div>
                 <div class="black--text text--light-1 font-weight-normal">
                   Country: {{ dormitory.country }}
+                </div>
+                <div class="black--text text--light-1 font-weight-normal">
+                  <p v-if="weatherDescription === 'clear sky'">
+                    weather:{{ weatherDescription }}
+                    <v-icon> mdi-weather-rainy</v-icon>{{ weatherData }}&deg;C
+                  </p>
+                  <p v-else-if="weatherDescription === 'fwe clouds'">
+                    weather:{{ weatherDescription }}
+                    <v-icon>mdi-white-balance-sunny</v-icon
+                    >{{ weatherData }}&deg;C
+                  </p>
+                  <p v-else-if="weatherDescription === 'scattered clouds'">
+                    weather:{{ weatherDescription }}
+                    <v-icon>mdi-weather-partly-cloudy</v-icon
+                    >{{ weatherData }}&deg;C
+                  </p>
+                  <p v-else-if="weatherDescription === 'broken clouds'">
+                    weather:{{ weatherDescription }}
+                    <v-icon>mdi-weather-cloudy</v-icon>{{ weatherData }}&deg;C
+                  </p>
+                  <p v-else-if="weatherDescription === 'shower rain'">
+                    weather:{{ weatherDescription }}
+                    <v-icon> mdi-weather-rainy</v-icon>{{ weatherData }}&deg;C
+                  </p>
+                  <p v-else-if="weatherDescription === 'rain'">
+                    weather:{{ weatherDescription }}
+                    <v-icon> mdi-weather-rainy</v-icon>{{ weatherData }}&deg;C
+                  </p>
+                  <p v-else-if="weatherDescription === 'light rain'">
+                    weather:{{ weatherDescription }}
+                    <v-icon> mdi-weather-rainy</v-icon>{{ weatherData }}&deg;C
+                  </p>
+                  <p v-else-if="weatherDescription === 'thunderstorm'">
+                    weather:{{ weatherDescription }}
+                    <v-icon> mdi-weather-rainy</v-icon>{{ weatherData }}&deg;C
+                  </p>
+                  <p v-else-if="weatherDescription === 'overcast clouds'">
+                    weather:{{ weatherDescription }}
+                    <v-icon>mdi-weather-cloudy</v-icon>{{ weatherData }}&deg;C
+                  </p>
+                  <p v-else-if="weatherDescription === 'snow'">
+                    weather:{{ weatherDescription }}
+                    <v-icon>mdi-weather-lightning</v-icon
+                    >{{ weatherData }}&deg;C
+                  </p>
+                  <p v-else-if="weatherDescription === 'mist'">
+                    weather:{{ weatherDescription }}
+                    <v-icon> mdi-weather-snowy</v-icon>{{ weatherData }}&deg;C
+                  </p>
                 </div>
                 <div class="deep-orange--text text--light-4 font-weight-bold">
                   Facilities:
@@ -147,6 +196,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import { mapActions, mapGetters } from "vuex";
 import Cookies from "vue-cookies";
 import mapboxgl from "mapbox-gl";
@@ -156,6 +206,9 @@ export default {
     return {
       filteredDormitories: [],
       id: Cookies.get("uniIdFromHome"),
+      icon: undefined,
+      weatherDescription: undefined,
+      weatherData: undefined,
     };
   },
   computed: {
@@ -221,7 +274,6 @@ export default {
           );
 
           const data = await response.json();
-          console.log(data);
 
           // Extract the latitude and longitude from the geocoding response
           const [longitude, latitude] = data.features[0].center;
@@ -236,8 +288,35 @@ export default {
         }
       });
     },
+    async getWeather() {
+      const baseUrl = "https://api.openweathermap.org/data/2.5/weather";
+      const API_KEY = "05ce8526518c02d3860ba3097108f4fe";
+
+      try {
+        for (const dormitory of this.get_dormDataFromHome) {
+          const response = await axios.get(baseUrl, {
+            params: {
+              q: dormitory.city,
+              appid: API_KEY,
+              units: "metric",
+            },
+          });
+          console.log(dormitory.city);
+          this.weatherData = Math.round(response.data.main.temp);
+          this.weatherDescription = response.data.weather[0].description;
+          let weatherIcon = response.data.weather[0].icon;
+          this.icon = `${weatherIcon}.png`;
+
+          console.log(this.weatherDescription);
+        }
+      } catch (error) {
+        console.error("Error fetching weather:", error);
+      }
+    },
   },
   mounted() {
+    this.getWeather();
+
     this.getUniFromHome();
     this.getDormsImageData();
     this.getMap();
@@ -267,10 +346,11 @@ export default {
 
 @media (max-width: 960px) {
 }
+
 .dorm-card {
   max-width: 400px;
   display: grid;
-  place-items: center;
+  place-items: start;
 }
 
 .dorm-carousel {

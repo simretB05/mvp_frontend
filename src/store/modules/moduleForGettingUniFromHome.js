@@ -150,6 +150,7 @@ const actions = {
             commit( 'setSearchData', input );
     },
 
+
 };
 
 export default {
