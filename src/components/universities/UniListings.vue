@@ -18,68 +18,6 @@
     <v-row>
       <!-- Dormitory Listing Column -->
       <v-col cols="12" md="6" style="border: 1px solid orange">
-        <v-card class="soft-box-shadow">
-          <v-card-title class="headline">Dormitories</v-card-title>
-          <v-card-text>
-            <v-row>
-              <!-- Search and Toggles Column -->
-              <v-col cols="12" md="6">
-                <!-- Search Dormitories Input -->
-                <!-- v-model="searchKeyword" -->
-                <!-- v-model="filterOneBed" -->
-                <!-- v-model="filterTwoBeds" -->
-                <!-- :error-messages="errorMessages" -->
-                <!-- v-model="avilablity_status" -->
-
-                <v-text-field
-                  class="text-custom-class"
-                  label="Search Dormitories"
-                  clearable
-                  append-icon="mdi-magnify"
-                ></v-text-field>
-                <!-- Unfurnished Switch -->
-                <v-switch
-                  class="text-custom-class"
-                  label="Unfurnished"
-                  color="primary"
-                ></v-switch>
-                <!-- Furnished Switch -->
-                <v-switch
-                  class="text-custom-class"
-                  label="Furnished"
-                  color="primary"
-                ></v-switch>
-              </v-col>
-
-              <!-- Price and Availability Column -->
-              <v-col cols="12" md="6">
-                <!-- Price Range Description -->
-                <p class="price-range-description">Price Range</p>
-                <!-- Max Price Input -->
-                <v-slider
-                  class="text-custom-class"
-                  :min="0"
-                  :max="10500"
-                  step="10"
-                  thumb-label
-                ></v-slider>
-                <!-- Room Availability Input -->
-                <!-- :items="stats" -->
-                <!-- :rules="[
-                    () => !!avilablity_status || 'This field is required',
-                  ]" -->
-
-                <v-autocomplete
-                  class="text-custom-class"
-                  ref="avilablity_status"
-                  label="Room Availability"
-                  placeholder="Select..."
-                  required
-                ></v-autocomplete>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
         <v-row justify="center" align="center" class="dorm-cards-row">
           <v-card
             class="ma-8 dorm-card"
@@ -87,17 +25,17 @@
             :key="index"
             cols="12"
           >
-            <div style="width: 100%" class="dorm-carousel">
+            <div style="width: 50%" class="dorm-carousel">
               <v-carousel hide-delimiter-background height="50%">
                 <v-carousel-item
-                  v-for="(image, index) in getDormImagesByDormId(dormitory.id)"
-                  :key="index"
+                  v-for="(image, i) in getDormImagesByDormId(dormitory.id)"
+                  :key="i"
                 >
                   <v-img :src="image.blobUrl" class="image-card"></v-img>
                 </v-carousel-item>
               </v-carousel>
             </div>
-            <div style="height: 266px">
+            <div style="height: 300px">
               <v-card-text class="card-info">
                 <div class="black--text text--darken-1 font-weight-normal">
                   Dormitory Name: {{ dormitory.name }}
@@ -166,7 +104,10 @@
                     <v-icon> mdi-weather-snowy</v-icon>{{ weatherData }}&deg;C
                   </p>
                 </div>
-                <div class="deep-orange--text text--light-4 font-weight-bold">
+                <div
+                  class="deep-orange--text text--light-4 font-weight-bold"
+                  style="width: 100%"
+                >
                   Facilities:
                 </div>
                 <v-chip-group>
@@ -181,6 +122,9 @@
                     {{ facility }}
                   </v-chip>
                 </v-chip-group>
+                <check-rooms-utils
+                  :dormitory_id="dormitory.id"
+                ></check-rooms-utils>
               </v-card-text>
             </div>
             <v-row justify="center" class="my-2"> </v-row>
@@ -200,8 +144,12 @@ import axios from "axios";
 import { mapActions, mapGetters } from "vuex";
 import Cookies from "vue-cookies";
 import mapboxgl from "mapbox-gl";
+import CheckRoomsUtils from "@/components/utils/CheckRoomsBtn.vue";
 
 export default {
+  components: {
+    CheckRoomsUtils,
+  },
   data() {
     return {
       filteredDormitories: [],
@@ -209,6 +157,7 @@ export default {
       icon: undefined,
       weatherDescription: undefined,
       weatherData: undefined,
+      dormitory_id: undefined,
     };
   },
   computed: {
@@ -255,7 +204,9 @@ export default {
       mapboxgl.accessToken =
         "pk.eyJ1Ijoic2ltYjA1IiwiYSI6ImNsbGZ0M3I1NjB1OXczcXBremVrMm5hOHQifQ.7clQHduZ3cW-0tSTtV0hqw";
       // Example: Center the map on Alberta, Canada (approximate center)
-      const initialCenter = [-114.0677, 53.5461]; // [longitude, latitude]
+      // const initialCenter = [-114.0677, 53.5461]; // [longitude, latitude]
+      const initialCenter = [-123.1216, 47.605]; // Adjusted coordinates
+
       const map = new mapboxgl.Map({
         container: "map-container",
         style: "mapbox://styles/mapbox/outdoors-v11", // Example map style URL
@@ -301,12 +252,10 @@ export default {
               units: "metric",
             },
           });
-          console.log(dormitory.city);
           this.weatherData = Math.round(response.data.main.temp);
           this.weatherDescription = response.data.weather[0].description;
           let weatherIcon = response.data.weather[0].icon;
           this.icon = `${weatherIcon}.png`;
-
           console.log(this.weatherDescription);
         }
       } catch (error) {
@@ -316,7 +265,6 @@ export default {
   },
   mounted() {
     this.getWeather();
-
     this.getUniFromHome();
     this.getDormsImageData();
     this.getMap();

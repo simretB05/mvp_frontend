@@ -11,7 +11,7 @@ import UniDormitoriesPage from '@/views/universities/UniDormitoriesPage'
 import UniRoomsPage from '@/views/universities/UniRoomsPage'
 import UniNotificationsPage from '@/views/universities/UniNotificationsPage'
 import AllUniRoomsPage from '@/views/universities/AllUniRoomsPage'
-
+import UserRoomsComponentPage from '@/views/Users/UserRoomsComponentPage'
 
 
 
@@ -73,6 +73,12 @@ const routes = [
     name: 'notifications',
     component: UniNotificationsPage
   },
+  {
+    path: '/uni-rooms-listing',
+    name: 'uni-rooms-listing',
+    component: UserRoomsComponentPage
+  },
+
 ]
 
 const router = new VueRouter( {

@@ -1,53 +1,43 @@
 <template>
   <v-container>
-    <v-row style="width: 70%; margin: 0 auto">
-      <v-col cols="12" style="width: 100%; margin: 0 auto">
-        <v-carousel
-          cycle
-          style="width: 100%; margin: 0 auto"
-          hide-delimiter-background
-          horizontal
+    <v-row>
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+        lg="3"
+        v-for="(item, i) in combinedGroups"
+        :key="i"
+      >
+        <v-card
+          width="100%"
+          height="400px"
+          style="border-radius: 25px"
+          class="d-flex flex-column"
         >
-          <v-carousel-item v-for="(group, j) in combinedGroups" :key="j">
-            <v-row class="no-wrap" width="100%">
-              <v-col
-                cols="12"
-                sm="12"
-                lg="4"
-                v-for="(item, i) in group"
-                :key="i"
-              >
-                <button
-                  style="border: none; background: none; width: 100%"
-                  @click="routeToListings(item.university.id)"
-                >
-                  <v-card
-                    width="100%"
-                    style="border-radius: 25px"
-                    class="d-flex flex-column"
-                  >
-                    <v-img
-                      :src="item.image"
-                      aspect-ratio="1"
-                      class="grey lighten-2"
-                    ></v-img>
-                    <v-card-text>
-                      <div
-                        class="black--text text--darken-1 font-weight-normal"
-                      >
-                        Student accommodation in
-                        {{ item[`university`][`city`] }}
-                      </div>
-                    </v-card-text>
-                  </v-card>
-                </button>
-              </v-col>
-            </v-row>
-          </v-carousel-item>
-        </v-carousel>
+          <v-img
+            :src="item.image"
+            aspect-ratio="1"
+            class="grey lighten-2"
+          ></v-img>
+          <v-card-text>
+            <div class="black--text text--darken-1 font-weight-normal">
+              Student accommodation in {{ item.university.city }}
+            </div>
+          </v-card-text>
+          <v-card-actions class="btn">
+            <v-btn
+              @click="routeToListings(item.university.id)"
+              color="#f4511e"
+              class="white--text text--darken-1 font-weight-normal"
+            >
+              View Details
+            </v-btn>
+          </v-card-actions>
+        </v-card>
       </v-col>
     </v-row>
-    <v-card width="70%" style="margin: 0 auto">
+    <v-card width="100%" style="margin: 20px auto">
       <v-card-title>Landlords and property managers </v-card-title>
       <v-card-text>
         <p>Register now your property at our brand new Extranet</p>
@@ -58,12 +48,14 @@
           color="#f4511e"
           width="200px"
           class="white--text text--darken-1 font-weight-normal"
-          >List your Place</v-btn
         >
+          List your Place
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
 </template>
+
 <script>
 import { mapActions, mapGetters } from "vuex";
 import Cookies from "vue-cookies";
@@ -82,15 +74,9 @@ export default {
   methods: {
     ...mapActions(["getAllUniversities", "getUnisImage"]),
 
-    // getRoomImagesByRoomId(roomId) {
-    //   if (roomId !== undefined && this.get_roomsImageData) {
-    //     return this.get_roomsImageData[roomId];
-    //   }
-    // },
     async getUnis() {
       try {
         let responsedata = await this.getAllUniversities();
-        // Cookies.set("responsedormitoryData", responsedata);
         responsedata;
         this.dialog === false;
       } catch (error) {
@@ -108,21 +94,10 @@ export default {
     createCombinedGroups() {
       let uniData = this.get_allUnisData;
       let imageData = this.get_uniImageData["1"];
-      let groupSize = 3; // Number of universities and images per group
-      let combinedGroups = [];
-
-      for (let i = 0; i < uniData.length; i += groupSize) {
-        let group = [];
-        for (let j = i; j < i + groupSize; j++) {
-          if (j < uniData.length) {
-            group.push({
-              university: uniData[j],
-              image: imageData[j % imageData.length],
-            });
-          }
-        }
-        combinedGroups.push(group);
-      }
+      let combinedGroups = uniData.map((university, index) => ({
+        university,
+        image: imageData[index % imageData.length],
+      }));
 
       this.combinedGroups = combinedGroups;
     },
@@ -148,10 +123,9 @@ export default {
   },
 };
 </script>
+
 <style scoped>
-.no-wrap {
-  flex-wrap: nowrap !important;
-  overflow-x: hidden;
+.btn {
+  margin: 0 auto;
 }
 </style>
- 
