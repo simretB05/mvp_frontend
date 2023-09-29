@@ -170,6 +170,7 @@
                 >{{ facility }}</v-chip
               >
             </v-chip-group>
+            <user-rating></user-rating>
           </v-card-text>
         </v-card>
       </v-col>
@@ -187,18 +188,25 @@
         </v-card>
       </v-dialog>
     </v-row>
+    <div class="rating-container">
+      <AddRatingsComponentVue v-if="show"></AddRatingsComponentVue>
+    </div>
   </v-container>
 </template>
     <script>
 import Cookies from "vue-cookies";
+import UserRating from "@/components/utils/UserRating.vue";
 import AddRooms from "@/components/universities/AddRooms.vue";
-import updateRoom from "@/components/universities/UpdatRoom";
+import updateRoom from "@/components/universities/UpdatRoom.vue";
+import AddRatingsComponentVue from "@/components/users/AddRatingsComponent.vue";
 
 import { mapActions, mapGetters } from "vuex";
 export default {
   components: {
     AddRooms,
+    UserRating,
     updateRoom,
+    AddRatingsComponentVue,
   },
   data() {
     return {
@@ -210,6 +218,7 @@ export default {
       editeDialog: false,
       get_roomIsloading: false,
       dormitories: [],
+      show: false,
     };
   },
   computed: {
@@ -268,6 +277,9 @@ export default {
       this.room_id = roomId;
       this.editeDialog = !this.editeDialog;
     },
+    showRatings() {
+      this.show = true;
+    },
   },
   mounted() {
     this.$root.$on("new_room_added", this.getUniroom);
@@ -281,6 +293,7 @@ export default {
     this.getRoomsImageData();
     this.getRoomImagesByRoomId();
     this.getUniroom();
+    this.$root.$on("show_ratings", this.showRatings);
   },
 };
 </script>
@@ -320,13 +333,18 @@ export default {
   width: 90%;
   margin: 30px;
 }
-
 .max-width {
   width: 100%;
   margin: 0 auto;
 }
 v-btn--icon {
   color: black;
+}
+.rating-container {
+  position: relative;
+  width: 50%;
+  top: -400px;
+  right: -300px;
 }
 </style>
     
