@@ -67,8 +67,8 @@ export default {
       formHasErrors: false,
       errorMessages: "",
       show1: false,
-      email: "contact@gp.ca",
-      password: "A12#gfbf",
+      email: "contact.chovila.ca",
+      password: "Password!1",
       universityInfo: undefined,
       universityId: undefined,
       rules: {

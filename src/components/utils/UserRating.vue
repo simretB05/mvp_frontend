@@ -25,7 +25,7 @@ export default {
   },
   data() {
     return {
-      rating: 0,
+      rating: 4.5,
     };
   },
 };

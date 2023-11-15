@@ -280,6 +280,9 @@ export default {
     showRatings() {
       this.show = true;
     },
+    cancleRatings() {
+      this.show = false;
+    },
   },
   mounted() {
     this.$root.$on("new_room_added", this.getUniroom);
@@ -294,6 +297,7 @@ export default {
     this.getRoomImagesByRoomId();
     this.getUniroom();
     this.$root.$on("show_ratings", this.showRatings);
+    this.$root.$on("cancle_ratings", this.cancleRatings);
   },
 };
 </script>
@@ -343,8 +347,8 @@ v-btn--icon {
 .rating-container {
   position: relative;
   width: 50%;
-  top: -400px;
-  right: -300px;
+  top: -200px;
+  right: -350px;
 }
 </style>
     

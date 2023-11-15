@@ -1,9 +1,10 @@
 <template>
   <div>
     <v-btn
-      class="mx-2 deep-orange--text text--darken-1 font-weight-bold"
+      class="mx-2 white--text text--darken-1 font-weight-bold"
       :dormitory_id="dormitory_id"
       @click="routeToRoomListing"
+      style="background-color: #f4511e"
       >Check Rooms</v-btn
     >
   </div>

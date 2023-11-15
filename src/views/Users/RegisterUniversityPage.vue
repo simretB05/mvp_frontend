@@ -17,5 +17,6 @@ export default {
 main {
   min-height: 80vh;
   margin: 36px;
+  background-color: blue;
 }
 </style>

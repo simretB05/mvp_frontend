@@ -89,7 +89,7 @@
               <span>Refresh form</span>
             </v-tooltip>
           </v-slide-x-reverse-transition>
-          <v-btn color="primary" text @click="submit"> Submit </v-btn>
+          <v-btn color="primar" text @click="submit"> Submit </v-btn>
         </v-card-actions>
       </v-card>
     </v-col>
@@ -191,10 +191,8 @@ export default {
     },
     submit() {
       this.formHasErrors = false;
-
       Object.keys(this.form).forEach((f) => {
         if (!this.form[f]) this.formHasErrors = true;
-
         this.$refs[f].validate(true);
       });
 
