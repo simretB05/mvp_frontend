@@ -12,12 +12,17 @@
         <div @submit.prevent="submitForm">
           <div class="form-group">
             <label for="name">Name:</label>
-            <input type="text" id="name" v-model="formData.name" required />
+            <input type="text" id="name" v-model="formData.username" required />
           </div>
 
           <div class="form-group">
             <label for="email">Email:</label>
-            <input type="email" id="email" v-model="formData.email" required />
+            <input
+              type="email"
+              id="email"
+              v-model="formData.user_email"
+              required
+            />
           </div>
 
           <div class="maleda">
@@ -53,8 +58,8 @@ export default {
   data() {
     return {
       formData: {
-        name: "",
-        email: "",
+        username: "",
+        user_email: "",
       },
       submitted: false,
     };
