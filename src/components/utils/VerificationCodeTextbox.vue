@@ -8,6 +8,7 @@
       <v-card-title class="text-h5">Enter Verification Code</v-card-title>
       <v-card-text>
         <v-text-field
+          ref="verificationCode"
           v-model="verificationCode"
           :rules="[() => !!verificationCode || 'This field is required']"
           :error-messages="errorMessages"
@@ -30,7 +31,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   data() {
@@ -49,9 +50,10 @@ export default {
     },
     ...mapGetters(["get_userVerifCode"]),
   },
+  watch: {
+    get_userVerifCode: "show_verify_box",
+  },
   methods: {
-    ...mapActions(["getVerification"]),
-
     resetForm() {
       this.errorMessages = [];
       this.formHasErrors = false;
@@ -59,7 +61,22 @@ export default {
         this.$refs[f].reset();
       });
     },
-    submitVerification() {},
+    submitVerification() {
+      console.log(this.form.verificationCode);
+      this.formHasErrors = false;
+      Object.keys(this.form).forEach((f) => {
+        if (!this.form[f]) this.formHasErrors = true;
+        this.$refs[f].validate(true);
+      });
+
+      if (
+        this.get_userVerifCode[0][`user_rating_code`] ===
+        this.form.verificationCode
+      ) {
+        console.log("verified");
+        this.$root.$emit("verified");
+      }
+    },
     show_verify_box() {
       if (this.get_userVerifCode && this.get_userVerifCode.length > 0) {
         this.dialog = true;

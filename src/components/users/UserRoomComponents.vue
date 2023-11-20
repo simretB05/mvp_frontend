@@ -188,8 +188,8 @@
         </v-card>
       </v-dialog>
     </v-row>
-
     <verification-code-textbox></verification-code-textbox>
+    <user-rating-comp></user-rating-comp>
   </v-container>
 </template>
     <script>
@@ -198,12 +198,14 @@ import UserRating from "@/components/utils/UserRating.vue";
 import AddRooms from "@/components/universities/AddRooms.vue";
 import updateRoom from "@/components/universities/UpdatRoom.vue";
 import VerificationCodeTextbox from "@/components/utils/VerificationCodeTextbox";
+import UserRatingComp from "@/components/utils/UserRatingComp.vue";
 import { mapActions, mapGetters } from "vuex";
 export default {
   components: {
     AddRooms,
     UserRating,
     updateRoom,
+    UserRatingComp,
     VerificationCodeTextbox,
   },
   data() {
@@ -297,6 +299,10 @@ export default {
     this.getUniroom();
     this.$root.$on("show_ratings", this.showRatings);
     this.$root.$on("cancle_ratings", this.cancleRatings);
+    this.$root.$on("verified", () => {
+      // Your arrow function logic here
+      console.log("Event 'verified' emitted!");
+    });
   },
 };
 </script>

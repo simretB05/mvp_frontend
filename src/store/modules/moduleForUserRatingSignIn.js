@@ -40,7 +40,7 @@ const getters = {
 };
 // Actions object
 const actions = {
-    //   Action for Adding Dormitories
+    //   Action for sending a verification code
     async getUserRatingInfo( { commit }, form )
     {
         commit( 'setLoading', true );
@@ -72,6 +72,38 @@ const actions = {
             // throw error; // Throw the error to be caught by the component
         }
     },
+    async sendUserRatingInfo( { commit }, form )
+    {
+        commit( 'setLoading', true );
+        try
+        {
+            const response = await axios.post( url, form, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            } );
+            Vue.$toast.success( "Ckeck your E-mail, varification Code has been sent", {
+                timeout: 4000,
+            } );
+            commit( 'setLoading', false );
+
+            commit( 'setUser_userVerifCode', response[`data`] );
+
+            return response.data; // Return the response data to the component
+
+        } catch ( error )
+        {
+            // Show error toast message
+            commit( 'setLoading', false );
+            commit( 'setError', 'Failed to fetch data. Please try again later.' );
+            // Show success toast message
+            Vue.$toast.error( "Something Went Wrong, Please Try Again Later!", {
+                timeout: 4000,
+            } );
+            // throw error; // Throw the error to be caught by the component
+        }
+    },
+
 
 };
 
