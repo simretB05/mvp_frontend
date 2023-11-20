@@ -18,8 +18,8 @@
         <v-card-title>
           <span class="text-h5" style="color: #f4511e">
             Please provide your name and email address to receive a rating
-            passcode!.</span
-          >
+            passcode!.
+          </span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -113,7 +113,6 @@ export default {
     },
     async submit() {
       this.formHasErrors = false;
-      console.log(this.form);
       Object.keys(this.form).forEach((f) => {
         if (!this.form[f]) this.formHasErrors = true;
         this.$refs[f].validate(true);
@@ -191,17 +190,14 @@ input {
   justify-content: space-between;
   margin: 10px auto;
 }
-
 .google-sign-in {
   margin-top: 20px;
   text-align: center;
 }
-
 .or-sign-up-with-google {
   margin-top: 10px;
   text-align: center;
 }
-
 .btn-google {
   background-color: #eaa211;
   color: rgb(49, 5, 5);

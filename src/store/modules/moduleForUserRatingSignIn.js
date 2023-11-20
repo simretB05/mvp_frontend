@@ -4,17 +4,15 @@ import Vue from "vue";
 import Cookies from "vue-cookies";
 import Toast from "vue-toastification";
 
-// Initialize Vue instance and use Vue Toastification plugin
+// Initialize Vue instance and use Vue Toastification plugin 
 Vue.use( Toast );
 
 let url = process.env.VUE_APP_BASE_URL + '/api/user_rating';
-
-
 // State object
 const state = {
     error: null,
     is_loading: false,
-    user_rating: [],
+    user_verifCode: [],
     token: Cookies.get( "token" ) || "",
 
 };
@@ -22,11 +20,11 @@ const state = {
 const mutations = {
     setLoading( state, isLoadingRooms )
     {
-        state.isLoadingRooms = isLoadingRooms;
+        state.is_loading = isLoadingRooms;
     },
-    setUser_ratingData( state, user_rating )
+    setUser_userVerifCode( state, user_verifCode )
     {
-        state.user_rating = user_rating;
+        state.user_verifCode = user_verifCode
     },
 
     setError( state, error )
@@ -36,12 +34,9 @@ const mutations = {
 };
 // Getters object
 const getters = {
-    // get_roomsData: ( state ) => state.roomsData,
-    // get_roomIsLoading: ( state ) => state.isLoadingDormitories,
-    // get_roomsInfoError: ( state ) => state.error,
-    // get_roomsDeleteIsLoading: ( state ) => state.isLoadingDormitories,
-    // get_roomsDeleteInfoError: ( state ) => state.error,
-    // get_filterRoomdData: ( state ) => state.filteredData
+    get_userVerifCode: ( state ) => state.user_verifCode,
+
+
 };
 // Actions object
 const actions = {
@@ -56,12 +51,13 @@ const actions = {
                     "Content-Type": "multipart/form-data",
                 },
             } );
-            commit( 'setLoading', false );
-            commit( 'setRoomInfoData', response[`data`] );
-
-            Vue.$toast.success( "Ckeck your E-mail, varification Code has been sent ", {
-                timeout: 2000,
+            Vue.$toast.success( "Ckeck your E-mail, varification Code has been sent", {
+                timeout: 4000,
             } );
+            commit( 'setLoading', false );
+
+            commit( 'setUser_userVerifCode', response[`data`] );
+
             return response.data; // Return the response data to the component
 
         } catch ( error )
@@ -71,7 +67,7 @@ const actions = {
             commit( 'setError', 'Failed to fetch data. Please try again later.' );
             // Show success toast message
             Vue.$toast.error( "Something Went Wrong, Please Try Again Later!", {
-                timeout: 2000,
+                timeout: 4000,
             } );
             // throw error; // Throw the error to be caught by the component
         }

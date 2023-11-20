@@ -22,9 +22,7 @@ export default {
       this.$router.push(`/uni-rooms-listing`);
     },
   },
-  mounted() {
-    console.log("this", this.dormitory_id);
-  },
+  mounted() {},
 };
 </script>
   

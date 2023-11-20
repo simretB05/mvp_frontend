@@ -188,9 +188,8 @@
         </v-card>
       </v-dialog>
     </v-row>
-    <div class="rating-container">
-      <AddRatingsComponentVue v-if="show"></AddRatingsComponentVue>
-    </div>
+
+    <verification-code-textbox></verification-code-textbox>
   </v-container>
 </template>
     <script>
@@ -198,19 +197,18 @@ import Cookies from "vue-cookies";
 import UserRating from "@/components/utils/UserRating.vue";
 import AddRooms from "@/components/universities/AddRooms.vue";
 import updateRoom from "@/components/universities/UpdatRoom.vue";
-import AddRatingsComponentVue from "@/components/users/AddRatingsComponent.vue";
-
+import VerificationCodeTextbox from "@/components/utils/VerificationCodeTextbox";
 import { mapActions, mapGetters } from "vuex";
 export default {
   components: {
     AddRooms,
     UserRating,
     updateRoom,
-    AddRatingsComponentVue,
+    VerificationCodeTextbox,
   },
   data() {
     return {
-      search_input: null,
+      VerificationCodeTextboxh_input: null,
       dialog3: false,
       room_id: undefined,
       dorm_id_from_user: Cookies.get("dorm_from_user"),
@@ -229,6 +227,7 @@ export default {
       "get_roomIsLoading",
       "get_dormDeleteIsLoading",
       "get_filterdData",
+      "get_userVerifCode",
     ]),
   },
   methods: {
