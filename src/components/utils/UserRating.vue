@@ -13,7 +13,7 @@
       size="18"
     >
     </v-rating>
-    <AddRatingsBtn></AddRatingsBtn>
+    <AddRatingsBtn :room_id="room_id"></AddRatingsBtn>
   </div>
 </template>
   <script>
@@ -22,6 +22,9 @@ import AddRatingsBtn from "@/components/utils/AddRatingsBtn.vue";
 export default {
   components: {
     AddRatingsBtn,
+  },
+  props: {
+    room_id: Number,
   },
   data() {
     return {

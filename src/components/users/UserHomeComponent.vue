@@ -53,15 +53,19 @@
         </v-btn>
       </v-card-actions>
     </v-card>
+    <users-rating-display-component></users-rating-display-component>
   </v-container>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import UsersRatingDisplayComponent from "@/components/users/UsersRatingDisplayComponent.vue";
 import Cookies from "vue-cookies";
 
 export default {
-  components: {},
+  components: {
+    UsersRatingDisplayComponent,
+  },
   data() {
     return {
       uniGroups: [],

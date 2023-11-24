@@ -8,11 +8,16 @@ import Toast from "vue-toastification";
 Vue.use( Toast );
 
 let url = process.env.VUE_APP_BASE_URL + '/api/user_rating';
+let rating_url = process.env.VUE_APP_BASE_URL + '/api/send_rating_value';
+let getRatings_url = process.env.VUE_APP_BASE_URL + '/api/get_all_rating';
+
+
 // State object
 const state = {
     error: null,
     is_loading: false,
     user_verifCode: [],
+    all_rating: [],
     token: Cookies.get( "token" ) || "",
 
 };
@@ -26,6 +31,10 @@ const mutations = {
     {
         state.user_verifCode = user_verifCode
     },
+    set_all_reviews( state, all_ratings )
+    {
+        state.all_rating = all_ratings
+    },
 
     setError( state, error )
     {
@@ -35,8 +44,7 @@ const mutations = {
 // Getters object
 const getters = {
     get_userVerifCode: ( state ) => state.user_verifCode,
-
-
+    get_all_reviews: ( state ) => state.all_rating,
 };
 // Actions object
 const actions = {
@@ -58,6 +66,7 @@ const actions = {
 
             commit( 'setUser_userVerifCode', response[`data`] );
 
+
             return response.data; // Return the response data to the component
 
         } catch ( error )
@@ -77,7 +86,7 @@ const actions = {
         commit( 'setLoading', true );
         try
         {
-            const response = await axios.post( url, form, {
+            const response = await axios.post( rating_url, form, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
@@ -86,7 +95,6 @@ const actions = {
                 timeout: 4000,
             } );
             commit( 'setLoading', false );
-
             commit( 'setUser_userVerifCode', response[`data`] );
 
             return response.data; // Return the response data to the component
@@ -103,8 +111,25 @@ const actions = {
             // throw error; // Throw the error to be caught by the component
         }
     },
+    async getAllRatings( { commit } )
+    {
+        commit( 'setLoading', true );
+        try
+        {
+            const response = await axios.get( getRatings_url, {
 
+            } );
+            commit( 'setLoading', false );
+            commit( 'set_all_reviews', response.data );
+            console.log( response.data )
+            return response.data; // Return the response data to the componentz
+        } catch ( error )
+        {
+            commit( 'setLoading', false );
+            commit( 'setError', 'Failed to fetch data. Please try again later.' );
 
+        }
+    },
 };
 
 export default {

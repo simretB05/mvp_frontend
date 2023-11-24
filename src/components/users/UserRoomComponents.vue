@@ -170,7 +170,7 @@
                 >{{ facility }}</v-chip
               >
             </v-chip-group>
-            <user-rating></user-rating>
+            <user-rating :room_id="room.id"></user-rating>
           </v-card-text>
         </v-card>
       </v-col>
@@ -299,10 +299,6 @@ export default {
     this.getUniroom();
     this.$root.$on("show_ratings", this.showRatings);
     this.$root.$on("cancle_ratings", this.cancleRatings);
-    this.$root.$on("verified", () => {
-      // Your arrow function logic here
-      console.log("Event 'verified' emitted!");
-    });
   },
 };
 </script>

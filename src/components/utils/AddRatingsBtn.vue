@@ -63,6 +63,9 @@
 import { mapActions } from "vuex";
 export default {
   components: {},
+  props: {
+    room_id: Number,
+  },
   data() {
     return {
       username: null,
@@ -80,6 +83,7 @@ export default {
   computed: {
     form() {
       return {
+        room_id: this.room_id,
         username: this.username,
         user_email: this.user_email,
       };
@@ -107,22 +111,47 @@ export default {
     resetForm() {
       this.errorMessages = [];
       this.formHasErrors = false;
+      console.log(this.form);
+      // Iterate through the keys of the 'this.form' object
       Object.keys(this.form).forEach((f) => {
-        this.$refs[f].reset();
+        // Check if the reference has a 'validate' function
+        if (this.$refs[f] && this.$refs[f].validate) {
+          // Call the 'validate' function with the argument 'false'
+          this.$refs[f].validate(false);
+
+          // After validating the form element, reset it to its initial state
+          // using the 'reset' function available on the form element's reference
+          this.$refs[f].reset();
+        } else if (f === "message" && this.$refs[f]) {
+          // Handle v-textarea separately
+          this.$refs[f].$refs.input.reset();
+        }
       });
     },
     async submit() {
       this.formHasErrors = false;
+      console.log(this.form);
       Object.keys(this.form).forEach((f) => {
-        if (!this.form[f]) this.formHasErrors = true;
-        this.$refs[f].validate(true);
-        this.dialog = false;
+        // if (!this.form[f] && this.form.dormitory_id == this.dormitory_id)
+        // Check if the form field value is empty, and if so, set formHasErrors to true
+        this.formHasErrors = true;
+        // Check if the element has a validate function before calling it
+        if (this.$refs[f] && this.$refs[f].validate) {
+          // Call the validate function of the element to trigger the validation
+          this.$refs[f].validate(true);
+        }
       });
-      try {
-        let responsedata = await this.getUserRatingInfo(this.form);
-        responsedata;
-      } catch (error) {
-        error;
+      if (this.formHasErrors === true) {
+        try {
+          let responsedata = await this.getUserRatingInfo(this.form);
+          responsedata;
+          if (responsedata) {
+            this.dialog = false;
+          }
+          this.$root.$emit("new_room_added");
+        } catch (error) {
+          error;
+        }
       }
     },
   },

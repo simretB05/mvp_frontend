@@ -11,6 +11,9 @@
         >
         <v-card-text>
           <div class="text-center">
+            <div>
+              <h3 style="color: #f35929">Room ID:{{ room_id }}</h3>
+            </div>
             <v-rating
               ref="rating"
               v-model="rating"
@@ -29,6 +32,16 @@
             :rules="[() => !!name || 'This field is required']"
             :error-messages="errorMessages"
             label="User Name"
+            outlined
+            dense
+            style="color: #f35929"
+          ></v-text-field>
+          <v-text-field
+            ref="email"
+            v-model="email"
+            :rules="[() => !!email || 'This field is required']"
+            :error-messages="errorMessages"
+            label="User Email"
             outlined
             dense
             style="color: #f35929"
@@ -83,22 +96,27 @@ export default {
   data() {
     return {
       name: null,
+      room_id: undefined,
+      email: null,
       message: "",
       rating: 0,
-      dialog: true,
+      dialog: false,
       formHasErrors: false,
       errorMessages: "",
     };
   },
   computed: {
+    ...mapGetters(["get_userVerifCode"]),
+
     form() {
       return {
-        name: this.name,
+        room_id: this.room_id,
+        username: this.name,
+        user_email: this.email,
         rating: this.rating,
         message: this.message,
       };
     },
-    ...mapGetters(["get_userVerifCode"]),
   },
   methods: {
     ...mapActions(["sendUserRatingInfo"]),
@@ -126,6 +144,8 @@ export default {
     async submitRating() {
       this.formHasErrors = false;
       console.log(this.form);
+      // Loop through each room image and group them by room_id
+
       Object.keys(this.form).forEach((f) => {
         // if (!this.form[f] && this.form.dormitory_id == this.dormitory_id)
         // Check if the form field value is empty, and if so, set formHasErrors to true
@@ -136,7 +156,7 @@ export default {
           this.$refs[f].validate(true);
         }
       });
-      if (this.token && this.formHasErrors === true) {
+      if (this.formHasErrors === true) {
         try {
           let responsedata = await this.sendUserRatingInfo(this.form);
           responsedata;
@@ -147,7 +167,15 @@ export default {
       }
     },
   },
-  mounted() {},
+  mounted() {
+    this.$root.$on("verified", () => {
+      // Your arrow function logic here
+      this.dialog = true;
+      for (const info of this.get_userVerifCode) {
+        this.room_id = info.room_id;
+      }
+    });
+  },
 };
 </script>
 <style scoped>

@@ -29,7 +29,7 @@ const mutations = {
 
     setdeleteRoom( state, id )
     {
-        if ( state.roomsData !== [] )
+        if ( state.roomsData != [] )
         {
             state.roomsData = state.roomsData.filter( data => data.id != id )
         }

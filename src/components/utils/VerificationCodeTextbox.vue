@@ -32,6 +32,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import Vue from "vue";
 
 export default {
   data() {
@@ -75,6 +76,14 @@ export default {
       ) {
         console.log("verified");
         this.$root.$emit("verified");
+        Vue.$toast.success("Verification Successful", {
+          timeout: 4000,
+        });
+        this.dialog = false;
+      } else {
+        Vue.$toast.error("Wrong verification Code, Please Try Again", {
+          timeout: 4000,
+        });
       }
     },
     show_verify_box() {
