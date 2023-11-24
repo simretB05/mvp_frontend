@@ -8,7 +8,7 @@
       >Verified Reviewers</v-card-title
     >
     <v-card class="mx-auto mt-4" max-width="100%">
-      <v-divider></v-divider>s
+      <v-divider></v-divider>
       <v-list>
         <v-list-item-group v-if="reviews.length > 0">
           <v-list-item v-for="(review, i) in reviews" :key="i">
