@@ -24,6 +24,7 @@
                   background-color="yellow"
                   color="amber"
                   half-increments
+                  readonly
                 ></v-rating>
               </v-list-item-subtitle>
             </v-list-item-content>
@@ -55,8 +56,9 @@ export default {
       try {
         let responsedata = await this.getAllRatings();
         responsedata;
+        console.log(this.get_all_reviews);
         this.reviews = responsedata;
-        console.log(responsedata);
+        console.log(this.reviews);
         this.dialog === false;
       } catch (error) {
         error;

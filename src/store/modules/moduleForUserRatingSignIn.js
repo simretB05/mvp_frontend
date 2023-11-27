@@ -94,10 +94,15 @@ const actions = {
             Vue.$toast.success( "Ckeck your E-mail, varification Code has been sent", {
                 timeout: 4000,
             } );
-            commit( 'setLoading', false );
-            commit( 'setUser_userVerifCode', response[`data`] );
+            let responseData = response[`data`]
+            responseData = JSON.parse( JSON.stringify( responseData ) )
 
-            return response.data; // Return the response data to the component
+            commit( 'setLoading', false );
+            commit( 'setUser_userVerifCode', JSON.parse( JSON.stringify( responseData ) ) );
+
+            return response.data;
+
+            // Return the response data to the component
 
         } catch ( error )
         {
