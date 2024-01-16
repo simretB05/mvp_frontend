@@ -20,7 +20,7 @@
               <p>{{ review.message }}</p>
               <v-list-item-subtitle>
                 <v-rating
-                  v-model="review.rating"
+                  :tt="parseFloat(review.rating)"
                   background-color="yellow"
                   color="amber"
                   half-increments
@@ -44,6 +44,7 @@ export default {
   data() {
     return {
       reviews: [],
+      tt: undefined,
     };
   },
   computed: {
@@ -52,16 +53,23 @@ export default {
   methods: {
     ...mapActions(["getAllRatings"]),
 
-    async get_AllRating() {
+    async get_AllRating(details) {
       try {
         let responsedata = await this.getAllRatings();
         responsedata;
-        console.log(this.get_all_reviews);
-        this.reviews = responsedata;
-        console.log(this.reviews);
-        this.dialog === false;
+        let tg = details.attribute.get("tt");
+        console.log(tg);
+
+        if (responsedata) {
+          console.log(this.get_all_reviews);
+
+          this.reviews = responsedata;
+          console.log(this.reviews);
+          this.dialog === false;
+        }
       } catch (error) {
         error;
+        console.log(error);
       }
     },
   },
