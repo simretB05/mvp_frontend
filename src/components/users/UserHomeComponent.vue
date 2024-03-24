@@ -12,12 +12,10 @@
             :style="{ backgroundImage: 'url(' + item.image + ')' }"
           ></div>
           <div class="custom-card-text" style="color:#f45228">
-            <p class="black--text text--darken-1 font-weight-normal text-center" >
-              Student accommodation in {{ item.university.city }}
-            </p>
+            <p class="text-center">Student accommodation in {{ item.university.city }}</p>
           </div>
           <v-card-actions class="d-flex justify-center">
-            <v-btn @click="routeToListings(item.university.id)" color="transparent" class="custom-btn" style="border:1px solid #f45228">
+            <v-btn @click="routeToListings(item.university.id)" color="transparent" class="custom-btn" style="border:1px solid #f45228;">
               View Details
               <v-icon right color="#f45228">mdi-arrow-right</v-icon>
             </v-btn>
@@ -125,6 +123,7 @@ export default {
   transition: transform 0.3s ease;
   cursor: pointer;
   margin-bottom: 20px;
+  height: 250px; /* Adjust the height as per your preference */
 }
 
 .custom-card:hover {
@@ -132,13 +131,14 @@ export default {
 }
 
 .custom-card-image {
-  height: 200px;
+  height: 150px; /* Adjust the height as per your preference */
   background-size: cover;
   background-position: center;
 }
 
 .custom-card-text {
-  padding: 15px;
+  padding: 5px;
+  font-size: .9rem;
 }
 
 .custom-card-actions {
@@ -148,10 +148,13 @@ export default {
 .custom-btn {
   border: 2px solid #f45228; 
   color: #f45228; 
+  font-size: .7rem;
 }
 
 /* Additional CSS to change <p> tag color */
 .custom-card-text p {
   color: #f45228;
+  font-size: .9rem;
+
 }
 </style>
