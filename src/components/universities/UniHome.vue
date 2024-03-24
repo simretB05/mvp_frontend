@@ -5,9 +5,7 @@
       <v-col>
         <h1>Welcome to our Home Page</h1>
       </v-col>
-      <v-col>
-        <!-- Add any navigation or buttons here if needed -->
-      </v-col>
+      <v-col> </v-col>
     </v-row>
 
     <!-- Statistics section -->

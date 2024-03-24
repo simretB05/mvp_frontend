@@ -126,7 +126,6 @@ const actions = {
             } );
             commit( 'setLoading', false );
             commit( 'set_all_reviews', response.data );
-            console.log( response.data )
             return response.data; // Return the response data to the componentz
         } catch ( error )
         {

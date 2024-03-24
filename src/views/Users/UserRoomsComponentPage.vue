@@ -11,7 +11,7 @@ export default {
     UserRoomComponents,
   },
 };
-</script>
+</script>  
 
 <style scoped>
-</style>
+</style> 

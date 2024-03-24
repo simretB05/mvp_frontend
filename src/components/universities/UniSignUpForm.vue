@@ -317,7 +317,6 @@ export default {
         this.$refs[f].reset();
       });
     },
-
     async submit() {
       this.formHasErrors = false;
       Object.keys(this.form).forEach((f) => {

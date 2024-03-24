@@ -7,7 +7,7 @@ import Toast from "vue-toastification";
 // Initialize Vue instance and use Vue Toastification plugin
 Vue.use( Toast );
 
-const url = process.env.VUE_APP_BASE_URL + '/api/university';
+const url = process.env.VUE_APP_BASE_URL + '/api/get_university_info';
 
 
 // State object

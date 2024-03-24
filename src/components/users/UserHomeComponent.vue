@@ -1,44 +1,32 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col
-        cols="12"
-        sm="6"
-        md="4"
-        lg="3"
+    <div class="row">
+      <div
+        class="col-12 col-sm-6 col-md-4 col-lg-3"
         v-for="(item, i) in combinedGroups"
         :key="i"
       >
-        <v-card
-          width="100%"
-          height="400px"
-          style="border-radius: 25px"
-          class="d-flex flex-column"
-        >
-          <v-img
-            :src="item.image"
-            aspect-ratio="1"
-            class="grey lighten-2"
-          ></v-img>
-          <v-card-text>
-            <div class="black--text text--darken-1 font-weight-normal">
+        <div class="custom-card" @click="routeToListings(item.university.id)">
+          <div
+            class="custom-card-image"
+            :style="{ backgroundImage: 'url(' + item.image + ')' }"
+          ></div>
+          <div class="custom-card-text" style="color:#f45228">
+            <p class="black--text text--darken-1 font-weight-normal text-center" >
               Student accommodation in {{ item.university.city }}
-            </div>
-          </v-card-text>
-          <v-card-actions class="btn">
-            <v-btn
-              @click="routeToListings(item.university.id)"
-              color="#f4511e"
-              class="white--text text--darken-1 font-weight-normal"
-            >
+            </p>
+          </div>
+          <v-card-actions class="d-flex justify-center">
+            <v-btn @click="routeToListings(item.university.id)" color="transparent" class="custom-btn" style="border:1px solid #f45228">
               View Details
+              <v-icon right color="#f45228">mdi-arrow-right</v-icon>
             </v-btn>
           </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-card width="100%" style="margin: 20px auto">
-      <v-card-title>Landlords and property managers </v-card-title>
+        </div>
+      </div>
+    </div>
+    <v-card width="100%" style="margin: 20px auto" class="text-center">
+      <v-card-title style="color: #f45228;">Landlords and property managers </v-card-title>
       <v-card-text>
         <p>Register now your property at our brand new Extranet</p>
       </v-card-text>
@@ -129,7 +117,41 @@ export default {
 </script>
 
 <style scoped>
-.btn {
-  margin: 0 auto;
+.custom-card {
+  border-radius: 10px;
+  background-color: #fff;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.custom-card:hover {
+  transform: translateY(-5px);
+}
+
+.custom-card-image {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+}
+
+.custom-card-text {
+  padding: 15px;
+}
+
+.custom-card-actions {
+  text-align: center;
+}
+
+.custom-btn {
+  border: 2px solid #f45228; 
+  color: #f45228; 
+}
+
+/* Additional CSS to change <p> tag color */
+.custom-card-text p {
+  color: #f45228;
 }
 </style>

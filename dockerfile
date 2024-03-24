@@ -1,23 +1,29 @@
-# Use a base image that includes Node.js and npm
-FROM node:14-alpine
+# Base image
+FROM node:14 as build
 
-# Set the working directory in the container
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the working directory
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install app dependencies
+# Install dependencies
 RUN npm install
 
-# Copy the entrypoint script to the container at /app
-COPY docker-entrypoint.sh /app/
-
-# Grant execute permission to the entrypoint script
-RUN chmod +x /app/docker-entrypoint.sh
-
-# Build the Vue.js app
+# Copy the rest of the app's code
 COPY . .
 
-# Set the entry point to your custom script
-ENTRYPOINT ["/app/docker-entrypoint.sh"]
+# Build the app
+RUN npm run build
+
+# Production image
+FROM nginx:1.21
+
+# Copy built app from previous stage
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Expose port 80
+EXPOSE 81
+
+# Start Nginx server
+CMD ["nginx", "-g", "daemon off;"]
